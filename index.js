@@ -1,45 +1,39 @@
-// スムーススクロール & メニューアクティブ切り替え
 document.addEventListener('DOMContentLoaded', () =>
 {
     const navLinks = document.querySelectorAll('nav a');
     const tapBtn = document.getElementById("tap-button");
-    const loadingScreen = document.getElementById("loading-screen"); // 変数名をscreenからloadingScreenに統一
+    const loadingScreen = document.getElementById("loading-screen");
 
-    // 全ての円要素を取得
     const outerCircle = document.querySelector('.circle-text.outer');
     const innerCircle = document.querySelector('.circle-text.inner');
 
-    // パネル要素を取得
     const topPanel = document.querySelector('.loading-panel.top');
     const middlePanel = document.querySelector('.loading-panel.middle');
     const bottomPanel = document.querySelector('.loading-panel.bottom');
 
-    const mainContent = document.querySelector('main'); // メインコンテンツ要素
+    const mainContent = document.querySelector('main');
 
     const particleContainer = document.getElementById('particle-container');
-    // パスワード関連の要素を取得
     const passwordOverlay = document.getElementById('password-overlay');
     const passwordInput = document.getElementById('password-input');
     const passwordSubmit = document.getElementById('password-submit');
     const passwordError = document.getElementById('password-error');
-    const passwordContainer = document.querySelector('.password-container'); // 揺れアニメーション用
-    let welcomeMessage = null; // 後で作成する「ようこそ！」メッセージ要素
+    const passwordContainer = document.querySelector('.password-container');
+    let welcomeMessage = null;
 
-    // --- 設定: 正しいパスワード ---
-    const CORRECT_PASSWORD = "Marumaru_portfolio"; // ここに設定したいパスワードを入力してください
-    // ----------------------------
+    const CORRECT_PASSWORD = "Marumaru_portfolio";
 
-    // 初期状態ではメインコンテンツを隠し、スクロールを無効にする
+    // サイトのメインコンテンツを初期状態で隠し、スクロールを無効化
     mainContent.classList.add('hidden-content');
-    document.body.style.overflow = 'hidden'; // パスワード画面表示中はスクロール禁止
+    document.body.style.overflow = 'hidden';
 
     // パスワード入力フィールドがフォーカスされたらエラーメッセージとエラーボーダーを隠す
     passwordInput.addEventListener('focus', () =>
     {
         passwordError.classList.remove('visible');
         passwordError.textContent = '';
-        passwordInput.classList.remove('error'); // エラーボーダーを削除
-        passwordContainer.classList.remove('shake'); // 揺れアニメーションを削除
+        passwordInput.classList.remove('error');
+        passwordContainer.classList.remove('shake');
     });
 
     // パスワード送信処理
@@ -47,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () =>
     {
         if (passwordInput.value === CORRECT_PASSWORD)
         {
-            // パスワードが正しい場合
-            passwordContainer.style.display = 'none'; // 追加: password-container全体を非表示にする
+            // パスワードが正しい場合、パスワードコンテナを非表示にする
+            passwordContainer.style.display = 'none';
 
             // 「ようこそ！」メッセージを生成して表示
             welcomeMessage = document.createElement('p');
@@ -59,32 +53,32 @@ document.addEventListener('DOMContentLoaded', () =>
             {
                 passwordOverlay.querySelector('.welcome-message').remove();
             }
-            // 変更: passwordOverlayの子要素として追加
+            // passwordOverlayの子要素として追加
             passwordOverlay.appendChild(welcomeMessage);
 
 
             // アニメーション後にオーバーレイを隠し、ローディング画面を開始
             setTimeout(() =>
             {
-                passwordOverlay.classList.add('hidden'); // パスワードオーバーレイを隠す
+                passwordOverlay.classList.add('hidden');
                 // ローディング画面のアニメーションを開始（ここではスクロール禁止を維持）
                 initializeLoadingScreen();
-            }, 1000); // 「ようこそ！」アニメーションのために1秒待つ
+            }, 1000);
 
         } else
         {
-            // パスワードが間違っている場合
+            // パスワードが間違っている場合、エラーメッセージを表示し、視覚的なフィードバックを与える
             passwordError.textContent = "パスワードが違います";
             passwordError.classList.add('visible');
-            passwordInput.classList.add('error'); // 赤いボーダーを追加
-            passwordContainer.classList.add('shake'); // 揺れアニメーションを追加
-            passwordInput.value = ''; // 入力フィールドをクリア
+            passwordInput.classList.add('error');
+            passwordContainer.classList.add('shake');
+            passwordInput.value = '';
 
             // アニメーション後にshakeクラスを削除し、次回の揺れを可能にする
             setTimeout(() =>
             {
                 passwordContainer.classList.remove('shake');
-            }, 300); // CSSアニメーションのdurationに合わせる
+            }, 300);
         }
     };
 
@@ -97,49 +91,69 @@ document.addEventListener('DOMContentLoaded', () =>
         }
     });
 
-
-
-    // 単一のパーティクルを作成する関数
-    const createParticle = () =>
+    // 単一のパーティクルを作成する関数 (isBurstがtrueの場合、バースト用の速いアニメーション設定を適用)
+    const createParticle = (isBurst = false) =>
     {
         const particle = document.createElement('div');
         particle.classList.add('particle');
 
-        // ランダムなサイズ for particles
-        const size = Math.random() * 20 + 5; // Size between 5px and 25px
+        // ランダムなサイズを設定 (5pxから25px)
+        const size = Math.random() * 20 + 5;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
 
-        // ランダムな開始位置 (x-axis)
+        // ランダムな開始位置 (x軸) を設定
         particle.style.left = `${Math.random() * 100}%`;
 
-        // ランダムなアニメーション持続時間を設定 (例: 4秒から10秒の間)
-        const duration = Math.random() * 6 + 4; // 4s to 10s
-        particle.style.animationDuration = `${duration}s`; // animationプロパティからdurationを分離
-        particle.style.animationName = 'floatUp'; // animation-nameも分離
-        particle.style.animationTimingFunction = 'ease-out';
-        particle.style.animationIterationCount = 'infinite';
+        let duration;
+        let delay;
 
-        // ランダムなアニメーション遅延をさらに追加して、開始タイミングもずらす
-        const delay = Math.random() * (duration - 1); // animationDelayをdurationより少し短くして、開始が早すぎないようにする
+        if (isBurst)
+        {
+            // バースト用の速いアニメーション設定
+            duration = Math.random() * 1 + 0.6;
+            delay = Math.random() * 0.1;
+            particle.style.animationIterationCount = '1';
+            particle.style.opacity = '1';
+            particle.style.bottom = `${-size}px`;
+        } else
+        {
+            // 通常の背景パーティクル設定
+            duration = Math.random() * 6 + 4;
+            delay = Math.random() * (duration - 1);
+            particle.classList.add('background-particle');
+            particle.style.animationIterationCount = 'infinite';
+            particle.style.bottom = `${-size}px`;
+        }
+
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationName = 'floatUp';
+        particle.style.animationTimingFunction = 'ease-out';
         particle.style.animationDelay = `${delay}s`;
 
+        // パーティクルをコンテナに追加
         particleContainer.appendChild(particle);
 
-        // Remove particle after its animation ends to prevent DOM clutter
+        // アニメーション終了後にパーティクルをDOMから削除し、メモリを解放 (主にburst用)
         particle.addEventListener('animationend', () =>
         {
-            particle.remove();
+            if (isBurst)
+            {
+                particle.remove();
+            }
         });
     };
+
 
     // ローディング画面のアニメーションを初期化する関数
     const initializeLoadingScreen = () =>
     {
-        loadingScreen.classList.add('visible'); // ローディング画面を表示状態にする
-        let particleInterval = setInterval(createParticle, 200); // 200msごとに新しいパーティクルを生成
+        // ローディング画面を表示状態にする
+        loadingScreen.classList.add('visible');
+        // 初期パーティクル生成を有効化
+        let particleInterval = setInterval(createParticle, 200);
 
-        // PC表示の場合にTAPをCLICKに変更
+        // PC表示の場合にTAPをCLICKに変更する
         const setButtonText = () =>
         {
             if (window.innerWidth > 480)
@@ -151,12 +165,11 @@ document.addEventListener('DOMContentLoaded', () =>
             }
         };
 
-        // 初期ロード時に設定
+        // 初期ロード時に設定し、ウィンドウのリサイズ時にも更新する
         setButtonText();
-        // ウィンドウのリサイズ時にも設定を更新
         window.addEventListener('resize', setButtonText);
 
-        // アニメーションを適用する関数 (ローディング画面の初期アニメーション)
+        // ローディング画面の初期アニメーションを適用する関数
         const animateTextPanels = () =>
         {
             // パネルのアニメーションクラスを適用
@@ -181,19 +194,63 @@ document.addEventListener('DOMContentLoaded', () =>
         // ローディング画面の初期アニメーションを開始
         animateTextPanels();
 
-        // TAP/CLICKボタンクリック時の処理 (この部分もinitializeLoadingScreen内に移動して整理)
+        // TAP/CLICKボタンクリック時の処理
         const handleTapClick = () =>
         {
+            // ローディング画面をフェードアウトさせる
             loadingScreen.classList.add('fade-out');
 
             // パーティクルの生成を停止
-            clearInterval(particleInterval); // パーティクル生成インターバルを停止
+            clearInterval(particleInterval);
 
-            // 円の要素を非表示にするアニメーション (CSSアニメーションを逆再生)
+            // 既存の背景パーティクルをフェードアウトさせる処理
+            document.querySelectorAll('.background-particle').forEach(bgParticle =>
+            {
+                // 既存のアニメーションを停止し、現在の位置で固定
+                const computedTransform = window.getComputedStyle(bgParticle).transform;
+                bgParticle.style.animation = 'none';
+                bgParticle.style.transform = computedTransform;
+
+                // フェードアウトアニメーションを適用 (少し上に移動しながら消える効果)
+                bgParticle.style.transition = 'opacity 1s ease-out, transform 1s ease-out';
+                bgParticle.style.opacity = '0';
+                bgParticle.style.transform = `${computedTransform} translateY(-50px)`;
+
+                // フェードアウト後、DOMから削除
+                setTimeout(() =>
+                {
+                    bgParticle.remove();
+                }, 1000);
+            });
+
+            // 大量のバブルを連続的に生成する処理 (バーストアニメーション)
+            const totalBubbles = 500;
+            const burstDuration = 500;
+            const bubblesPerInterval = 5;
+            let generatedBubbles = 0;
+
+            const burstInterval = setInterval(() =>
+            {
+                for (let i = 0; i < bubblesPerInterval; i++)
+                {
+                    if (generatedBubbles < totalBubbles)
+                    {
+                        createParticle(true);
+                        generatedBubbles++;
+                    } else
+                    {
+                        clearInterval(burstInterval);
+                        break;
+                    }
+                }
+            }, burstDuration / (totalBubbles / bubblesPerInterval));
+
+
+            // 円の要素を非表示にするアニメーション
             if (outerCircle) outerCircle.classList.add('reverse-circle-text');
             if (innerCircle) innerCircle.classList.add('reverse-circle-text');
 
-            // パネルのアニメーションを逆再生 (または非表示)
+            // パネルのアニメーションを逆再生
             topPanel.classList.add('reverse-panel-top');
             middlePanel.classList.add('reverse-panel-middle');
             bottomPanel.classList.add('reverse-panel-bottom');
@@ -208,25 +265,25 @@ document.addEventListener('DOMContentLoaded', () =>
             // TAP/CLICKボタンをフェードアウト
             if (tapBtn) tapBtn.classList.add('fade-out');
 
-            // アニメーション終了後にローディング画面を完全に非表示にする
+            // アニメーション終了後にローディング画面を完全に非表示にし、メインコンテンツを表示
             setTimeout(() =>
             {
-                loadingScreen.classList.add('hidden'); // display: none; を適用
-                loadingScreen.style.pointerEvents = 'none'; // クリックイベントを無効化
+                loadingScreen.classList.add('hidden');
+                loadingScreen.style.pointerEvents = 'none';
                 document.body.style.overflow = ''; // スクロール禁止を解除
-                // メインコンテンツの表示
-                mainContent.classList.remove('hidden-content'); // hidden-contentクラスを削除
-                mainContent.classList.add('visible-content'); // 必要であればフェードイン用クラス
+                mainContent.classList.remove('hidden-content');
+                mainContent.classList.add('visible-content');
 
                 // ヘッダーのタイピングアニメーションを開始
                 startHeaderTypingAnimation();
 
-            }, 1000); // 最も長い逆再生アニメーションの duration に合わせる (例: 1秒)
+            }, 700);
         };
-        tapBtn.addEventListener('click', handleTapClick); // イベントリスナーをここで設定
+        // TAP/CLICKボタンにイベントリスナーを設定
+        tapBtn.addEventListener('click', handleTapClick);
     };
 
-    // ヘッダーのタイピングアニメーション関連の変数と関数
+    // ヘッダーのタイピングアニメーション関連の関数
     const startHeaderTypingAnimation = () =>
     {
         const typingElements = document.querySelectorAll('.section-button span');
@@ -307,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () =>
     }
 
 
-    // スムーススクロール
+    // スムーススクロール機能
     navLinks.forEach(link =>
     {
         link.addEventListener('click', (e) =>
@@ -332,9 +389,9 @@ document.addEventListener('DOMContentLoaded', () =>
     // Intersection Observerでセクションがビューポートに入ったらボタンをアクティブにする
     const sections = document.querySelectorAll('section');
     const observerOptions = {
-        root: null, // ビューポートをルートにする
+        root: null,
         rootMargin: '0px',
-        threshold: 0.5 // セクションの50%が見えたら
+        threshold: 0.3
     };
 
     const sectionObserver = new IntersectionObserver((entries, observer) =>
@@ -373,7 +430,69 @@ document.addEventListener('DOMContentLoaded', () =>
         });
     }
 
-    // WORKSセクションのタブ切り替え
+    // 別途DOMContentLoadedリスナー内でナビゲーションボタンのアクティブ状態を管理
+    document.addEventListener('DOMContentLoaded', () =>
+    {
+        const sections = document.querySelectorAll('section');
+        const navButtons = document.querySelectorAll('.section-button');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const sectionObserver = new IntersectionObserver((entries, observer) =>
+        {
+            entries.forEach(entry =>
+            {
+                if (entry.isIntersecting)
+                {
+                    // すべてのボタンからactiveクラスを削除
+                    navButtons.forEach(button => button.classList.remove('active'));
+
+                    // 現在表示されているセクションに対応するボタンにactiveクラスを追加
+                    const targetId = entry.target.id;
+                    const correspondingButton = document.querySelector(`.section-button[href="#${targetId}"]`);
+                    if (correspondingButton)
+                    {
+                        correspondingButton.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section =>
+        {
+            sectionObserver.observe(section);
+        });
+
+        // スクロール時に手動でアクティブクラスを更新するイベントリスナーを追加
+        navButtons.forEach(button =>
+        {
+            button.addEventListener('click', function (e)
+            {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection)
+                {
+                    // スムーズスクロール
+                    window.scrollTo({
+                        top: targetSection.offsetTop - document.querySelector('header').offsetHeight,
+                        behavior: 'smooth'
+                    });
+
+                    // クリックされたボタンにactiveクラスを付与
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+    });
+
+    // WORKSセクションのタブ切り替え機能
     const categoryItems = document.querySelectorAll('.category-item');
     const workItems = document.querySelectorAll('.work-item');
 
@@ -381,19 +500,18 @@ document.addEventListener('DOMContentLoaded', () =>
     {
         item.addEventListener('click', () =>
         {
-            // 全てのカテゴリからactiveクラスを削除
+            // 全てのカテゴリからactiveクラスを削除し、クリックされたカテゴリに追加
             categoryItems.forEach(cat => cat.classList.remove('active'));
-            // クリックされたカテゴリにactiveクラスを追加
             item.classList.add('active');
 
-            const filter = item.dataset.category; // data-category属性からフィルタ値を取得
+            const filter = item.dataset.category;
 
+            // 作品の表示・非表示を切り替える
             workItems.forEach(workItem =>
             {
-                // 'all'が選択されているか、作品のカテゴリがフィルタ値と一致する場合に表示
                 if (filter === 'all' || workItem.dataset.category === filter)
                 {
-                    workItem.style.display = 'flex'; // flexに戻す
+                    workItem.style.display = 'flex';
                 } else
                 {
                     workItem.style.display = 'none';
@@ -402,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () =>
         });
     });
 
-    // ===== モーダル関連のJavaScript =====
+    // モーダル関連のJavaScript
     const workModal = document.getElementById('work-modal');
     const modalCloseButton = document.querySelector('.modal-close-button');
     const modalImage = document.getElementById('modal-image');
@@ -412,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () =>
     const modalInfo = document.getElementById('modal-info');
     const modalLink = document.getElementById('modal-link');
 
+    // 作品データ
     const works = {
 
         "my-portfolio": {
@@ -434,6 +553,7 @@ document.addEventListener('DOMContentLoaded', () =>
             description: "ゼミ選びに悩む学生のために、情報を整理し、直感的に比較できるよう設計されたゼミ紹介サイトのデザインです。構成・配色・UIすべてにおいて、閲覧者目線を重視しました。",
             info: [
                 "技術: HTML, CSS, JavaScript",
+                "担当; UI/UX設計,コーディング",
                 "制作年月: 2025年1月",
                 "制作時間: 約2ヶ月",
                 "ポイント: 活動内容や傾向ごとのフィルタ機能、カード形式での比較のしやすさ、親しみやすい配色などを意識し、利用者が情報を迷わず取得できる構造にしました。"
@@ -535,15 +655,17 @@ document.addEventListener('DOMContentLoaded', () =>
         }
     };
 
+    // 詳細表示ボタンクリック時の処理
     document.querySelectorAll('.view-details-button').forEach(button =>
     {
         button.addEventListener('click', (e) =>
         {
             e.stopPropagation();
             const workId = button.dataset.id;
-            const work = works[workId]; // actionは不要なので削除
+            const work = works[workId];
             if (!work) return;
 
+            // モーダルに作品情報を設定
             modalTitle.textContent = work.title;
             modalDescription.textContent = work.description;
             modalInfo.innerHTML = '';
@@ -556,6 +678,7 @@ document.addEventListener('DOMContentLoaded', () =>
             modalImage.src = work.images[0] || '';
             modalImage.style.display = 'block';
 
+            // サムネイルナビゲーションを設定
             modalThumbnailNav.innerHTML = '';
             if (work.images.length > 0)
             {
@@ -575,18 +698,20 @@ document.addEventListener('DOMContentLoaded', () =>
                 });
             }
 
+            // リンクの表示/非表示を切り替える
             if (work.link)
             {
                 modalLink.href = work.link;
                 modalLink.textContent = 'サイトを見る';
-                modalLink.classList.remove('hidden'); // hiddenクラスを削除して表示
+                modalLink.classList.remove('hidden');
             } else
             {
-                modalLink.href = '#'; // リンクをリセット
-                modalLink.textContent = ''; // テキストを空にする
-                modalLink.classList.add('hidden'); // hiddenクラスを追加して非表示
+                modalLink.href = '#';
+                modalLink.textContent = '';
+                modalLink.classList.add('hidden');
             }
 
+            // モーダルを表示し、スクロールを無効化
             workModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
@@ -600,12 +725,13 @@ document.addEventListener('DOMContentLoaded', () =>
         modalThumbnailNav.innerHTML = '';
         modalLink.href = '#';
         modalLink.textContent = '';
-        modalLink.classList.add('hidden'); // 閉じる時にも確実に非表示にする
-        document.body.style.overflow = '';
+        modalLink.classList.add('hidden');
+        document.body.style.overflow = ''; // スクロール禁止を解除
     };
 
     modalCloseButton.addEventListener('click', closeModal);
 
+    // モーダル背景クリックで閉じる
     window.addEventListener('click', (e) =>
     {
         if (e.target === workModal)
