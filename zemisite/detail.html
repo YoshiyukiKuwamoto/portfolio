@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ゼミナール紹介サイト</title>
+  <link rel="stylesheet" href="detail.css">
+  <link rel="stylesheet" href="zemisyoukai.css">
+  <script src="zemisyoukai.js"></script>
+  <script src="detail.js"></script>
+  <script src="auth.js"></script>
+
+
+  <!-- Chart.js ライブラリの追加 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <!-- 左：タイトル -->
+      <h1 class="site-title">ゼミナール紹介サイト</h1>
+
+      <!-- 右：プロフ帳ボタン -->
+      <div class="header-right">
+        <div class="profile-dropdown">
+          <button id="profile-button">プロフ帳</button>
+          <ul id="profile-list" class="hidden"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- プロフ帳モーダル（header 外）-->
+    <div id="profile-modal" class="hidden">
+      <div class="profile-overlay"></div>
+      <div class="profile-content">
+        <button id="close-profile">×</button>
+        <h2 id="profile-title"></h2>
+        <img id="profile-image" src="" alt="ゼミプロフ">
+        <button id="prev-profile" class="nav-button">&lt;</button>
+        <button id="next-profile" class="nav-button">&gt;</button>
+      </div>
+    </div>
+  </header>
+
+
+  <main>
+    <!-- チャートカード -->
+    <div class="chart-card">
+      <h2>ゼミ名</h2>
+      <canvas id="radarChart1"></canvas>
+    </div>
+
+    <!-- 説明カード -->
+    <div class="description-card">
+      <h3>ゼミ名</h3>
+      <img src="image.jpg" alt="ゼミ名の画像" class="detail-image">
+      <p>ゼミの説明がここに入ります。</p>
+      <div class="zemi-detail">
+        <h4>ゼミでの活動内容</h4>
+        <p id="activity"></p>
+
+        <h4>卒研の詳細・理念</h4>
+        <p id="research"></p>
+
+        <h4>ゼミ生の作品・卒論</h4>
+        <p id="works"></p>
+
+        <!-- 作品スライダー用 -->
+        <div id="works-gallery-${card.id}" class="works-gallery hidden">
+          <button class="gallery-btn" id="prev-slide-${card.id}">◀</button>
+          <img id="current-work-image-${card.id}" class="gallery-image" src="${card.worksImages[0]}" alt="作品画像">
+          <button class="gallery-btn" id="next-slide-${card.id}">▶</button>
+        </div>
+
+        <h4>過去の課外活動</h4>
+        <p id="extracurricular"></p>
+
+        <h4>ゼミのSNS</h4>
+        <p id="sns"></p>
+
+        <h4>ゼミを志望した理由</h4>
+        <p id="reason"></p>
+      </div>
+    </div>
+    </div>
+  </main>
+
+
+  <footer class="site-footer">
+    <p>&copy; 2025 プロジェクトトライアルチーム楓</p>
+  </footer>
+</body>
+
+</html>
