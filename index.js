@@ -529,8 +529,8 @@ document.addEventListener('DOMContentLoaded', () =>
                 "ポイント: 表面は自身で製作した彩度の高いイラストを配置し、インパクトのある情報伝達を意識。裏面には自身のオリジナルイラストを配置することで、個人的なタッチと記憶に残るデザインを両立させました。"
             ],
             images: [
-                "image/まじめ名刺表.jpg",
-                "image/まじめ名刺裏.jpg"
+                "image/meisi_front.jpg",
+                "image/meisi_back.jpg"
             ]
         }
     };
