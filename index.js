@@ -439,11 +439,22 @@ document.addEventListener('DOMContentLoaded', () =>
                 "ポイント: 活動内容や傾向ごとのフィルタ機能、カード形式での比較のしやすさ、親しみやすい配色などを意識し、利用者が情報を迷わず取得できる構造にしました。"
             ],
             link: "zemisite/zemisyoukai.html",
-            images: ["image/webzemi.png"]
+            images: ["image/webzemi.png",
+                "image/スクリーンショット 2025-06-28 16.54.24.png",
+                "image/スクリーンショット 2025-06-28 16.54.44.png",
+                "image/スクリーンショット 2025-06-28 16.55.08.png",
+                "image/スクリーンショット 2025-06-28 16.46.30.png",
+                "image/スクリーンショット 2025-06-28 16.56.17.png",
+                "image/スクリーンショット 2025-06-28 16.55.45.png",
+                "image/スクリーンショット 2025-06-28 16.56.32.png",
+                "image/スクリーンショット 2025-06-28 16.56.49.png",
+                "image/スクリーンショット 2025-06-28 16.55.28.png",
+
+            ]
         },
         "flyer-design": {
             type: "image",
-            title: "フライヤーデザイン（バンドライブ告知）",
+            title: ["フライヤーデザイン"],
             description: "架空のバンドライブ告知用フライヤーデザインです。情報の優先順位を整理し、見る人に伝えたい内容が一目で分かるよう構成しました。クリエイティブな表現を通じて視覚的なインパクトを追求しています。",
             info: [
                 "技術: Adobe Illustrator, Adobe Photoshop",
@@ -497,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () =>
         },
         "poster-design-work": {
             type: "image",
-            title: "ポスターデザイン（コスメ販促会）",
+            title: "ポスターデザイン",
             description: "クリスマスシーズンに合わせた女性向けコスメ販促会の告知ポスターとして制作しました。華やかさと商品の魅力を最大限に引き立て、購買意欲を喚起するデザインを目指しました。",
             info: [
                 "技術: Adobe Illustrator",
