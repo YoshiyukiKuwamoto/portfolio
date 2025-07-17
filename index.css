@@ -1149,11 +1149,17 @@ footer {
     }
 
     .skills-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 0 10px;
     }
 
     .works-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 0 10px;
     }
 
     .loading-text-svg {
