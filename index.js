@@ -652,6 +652,20 @@ document.addEventListener('DOMContentLoaded', () =>
                 "image/meisi_front.jpg",
                 "image/meisi_back.jpg"
             ]
+        },
+
+        "fake-banner-design-01": {
+            type: "image",
+            title: "バナーデザイン",
+            description: "架空の飲み物のバナーをデザインしました。可愛らしさと商品の魅力を最大限に引き立て、購買意欲を喚起すしクーポンを使用したくなるように意識しました。",
+            info: [
+                "技術: Adobe Photoshop",
+                "制作年月: 2025年6月",
+                "制作時間: 約2時間",
+            ],
+            images: [
+                "image/banner_strawberry-smoothie_001.jpg",
+            ]
         }
     };
 
