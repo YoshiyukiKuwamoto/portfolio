@@ -1149,15 +1149,15 @@ footer {
     }
 
     .skills-grid {
-        display: flex;
-        flex-direction: column;
+        display: flex !important;
+        flex-direction: column !important;
         gap: 30px;
         padding: 0 10px;
     }
 
     .works-grid {
-        display: flex;
-        flex-direction: column;
+        display: flex !important;
+        flex-direction: column !important;
         gap: 30px;
         padding: 0 10px;
     }
