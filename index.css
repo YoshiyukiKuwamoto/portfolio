@@ -1153,6 +1153,7 @@ footer {
         flex-direction: column !important;
         gap: 30px;
         padding: 0 10px;
+        width: auto;
     }
 
     .works-grid {
@@ -1160,6 +1161,7 @@ footer {
         flex-direction: column !important;
         gap: 30px;
         padding: 0 10px;
+        width: auto;
     }
 
     .loading-text-svg {
@@ -1238,6 +1240,23 @@ footer {
 }
 
 @media (max-width: 480px) {
+
+    .skills-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 30px;
+        padding: 0 10px;
+        width: auto;
+    }
+
+    .works-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 30px;
+        padding: 0 10px;
+        width: auto;
+    }
+
     .loading-text-svg {
         font-size: 3rem;
     }
