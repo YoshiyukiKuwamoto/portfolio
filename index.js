@@ -767,7 +767,7 @@ document.addEventListener('DOMContentLoaded', () =>
             display_mode: "fit"
         },
 
-        "package-design": {
+        "package-design-work": {
             type: "image",
             category: "dtp-design",
             title: "包装紙デザイン",
