@@ -590,7 +590,7 @@ section h2::after {
 }
 
 .work-title-area h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #2c7ac1;
     margin: 10px;
 }
@@ -677,20 +677,6 @@ section h2::after {
     /* アスペクト比を維持しつつ、コンテナに収める */
     width: auto;
     height: auto;
-    cursor: zoom-in;
-    /* ズームインできることを示す */
-}
-
-/* fitモードの時に適用 */
-.modal-image-container.fit img {
-    width: 100%;
-    /* コンテナの幅いっぱいに広げる */
-    height: auto;
-    max-width: none;
-    max-height: none;
-    object-fit: contain;
-    cursor: default;
-    /* デフォルトのカーソルに戻す */
 }
 
 /* フッター */
