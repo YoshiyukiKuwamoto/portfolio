@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () =>
     let welcomeMessage = null;
 
     const CORRECT_PASSWORD = "Marumaru_portfolio";
+    setupCategoryFilters();
 
     // サイトのメインコンテンツを初期状態で隠し、スクロールを無効化
     mainContent.classList.add('hidden-content');
@@ -119,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () =>
         } else
         {
             // 通常の背景パーティクル設定
-            duration = Math.random() * 6 + 4;
+            duration = Math.random() * 3 + 2;
             delay = Math.random() * (duration - 1);
             particle.classList.add('background-particle');
             particle.style.animationIterationCount = 'infinite';
@@ -394,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () =>
         threshold: 0.3
     };
 
-    const sectionObserver = new IntersectionObserver((entries, observer) =>
+    const sectionObserver = new IntersectionObserver((entries) =>
     {
         entries.forEach(entry =>
         {
@@ -442,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () =>
             threshold: 0.5
         };
 
-        const sectionObserver = new IntersectionObserver((entries, observer) =>
+        const sectionObserver = new IntersectionObserver((entries) =>
         {
             entries.forEach(entry =>
             {
@@ -492,33 +493,44 @@ document.addEventListener('DOMContentLoaded', () =>
         });
     });
 
-    // WORKSセクションのタブ切り替え機能
-    const categoryItems = document.querySelectorAll('.category-item');
-    const workItems = document.querySelectorAll('.work-item');
-
-    categoryItems.forEach(item =>
+    function setupCategoryFilters()
     {
-        item.addEventListener('click', () =>
+        const categoryItems = document.querySelectorAll(".category-item");
+        const workItems = document.querySelectorAll(".work-item");
+
+        categoryItems.forEach((categoryItem) =>
         {
-            // 全てのカテゴリからactiveクラスを削除し、クリックされたカテゴリに追加
-            categoryItems.forEach(cat => cat.classList.remove('active'));
-            item.classList.add('active');
-
-            const filter = item.dataset.category;
-
-            // 作品の表示・非表示を切り替える
-            workItems.forEach(workItem =>
+            categoryItem.addEventListener("click", () =>
             {
-                if (filter === 'all' || workItem.dataset.category === filter)
+                const selectedCategory = categoryItem.getAttribute("data-filter");
+
+                // activeクラス切り替え
+                categoryItems.forEach((item) => item.classList.remove("active"));
+                categoryItem.classList.add("active");
+
+                // 各work-itemの表示制御
+                workItems.forEach((workItem) =>
                 {
-                    workItem.style.display = 'flex';
-                } else
-                {
-                    workItem.style.display = 'none';
-                }
+                    const itemCategory = workItem.getAttribute("data-category");
+
+                    if (selectedCategory === "all" || itemCategory === selectedCategory)
+                    {
+                        workItem.style.display = "flex";
+
+                        // 再表示時にアニメーションクラスを一度削除して再付与（連打対策）
+                        workItem.classList.remove("fade-in-up");
+                        void workItem.offsetWidth; // 強制再描画（リセット）
+                        workItem.classList.add("fade-in-up");
+
+                    } else
+                    {
+                        workItem.style.display = "none";
+                        workItem.classList.remove("fade-in-up");
+                    }
+                });
             });
         });
-    });
+    }
 
     // モーダル関連のJavaScript
     const workModal = document.getElementById('work-modal');
@@ -535,139 +547,249 @@ document.addEventListener('DOMContentLoaded', () =>
 
         "my-portfolio": {
             type: "image",
-            title: "自身のポートフォリオサイト",
-            description: "自身のWeb制作・デザインスキルを総合的に示すために、学習した知識と技術を統合して企画・制作したポートフォリオサイトです。訪問者にとって使いやすく、私の個性や成長プロセスが伝わるデザインを目指しました。",
+            category: "web-coding",
+            title: "ポートフォリオサイト",
+            description: "自身のWeb制作スキルを総合的に示すため、企画・制作したポートフォリオサイトです。ローディング画面や作品一覧のフィルター機能など、JavaScriptを活用したインタラクティブな表現に挑戦しました。",
             info: [
-                "技術: HTML, CSS, JavaScript",
-                "制作年月:2025年6月",
-                "制作時間:約1週間",
-                "ポイント: ローディング画面のアニメーションによるユーザーエンゲージメント向上、各セクションへのスムーズなナビゲーションで快適な閲覧体験を提供できるよう注力しました。",
-                "学び: Web開発の全体像と自己表現の重要性を実感しました。"
+                "制作開始時期: 2025.7",
+                "ターゲット: 採用担当者",
+                "使用ツール: HTML, CSS, JavaScript",
+                "制作期間: 約1ヶ月",
+                "意図としたデザイン: シンプルで使いやすいUIと、訪問者を惹きつける動的な表現の両立を目指しました。特に、ローディング画面からメインコンテンツへのスムーズな遷移や、作品の情報を整理するための機能設計に注力しました。",
+                "得られた学び: 独学で習得した技術を組み合わせることで、アイデアを形にする楽しさと、ユーザーエクスペリエンス（UX）を考慮した実装の重要性を再認識しました。"
             ],
             link: "",
-            images: ["image/portfoliopic.png"]
+            images: ["image/portfoliopic.png"],
+            display_mode: "fit"
         },
         "zemi-site": {
             type: "image",
+            category: "web-coding",
             title: "ゼミ紹介サイト",
-            description: "ゼミ選びに悩む学生のために、情報を整理し、直感的に比較できるよう設計されたゼミ紹介サイトのデザインです。構成・配色・UIすべてにおいて、閲覧者目線を重視しました。",
+            description: "5人グループで制作した、本学の情報メディア学部ゼミの魅力を1,2年生に伝えるためのウェブサイトです。チームの一員として、主にグループの進行管理やUI/UX設計、コーディングを担当しました。",
             info: [
-                "技術: HTML, CSS, JavaScript",
-                "担当; UI/UX設計,コーディング",
-                "制作年月: 2025年1月",
-                "制作時間: 約2ヶ月",
-                "ポイント: 活動内容や傾向ごとのフィルタ機能、カード形式での比較のしやすさ、親しみやすい配色などを意識し、利用者が情報を迷わず取得できる構造にしました。"
+                "制作開始時期: 2025.1",
+                "製作講義: プロジェクト・トライアルI,プロジェクト・トライアルII",
+                "ターゲット: 本学の情報メディア学部の1,2年生",
+                "使用ツール: HTML, CSS, JavaScript",
+                "制作期間: 約240日",
+                "公開日未定",
+                "意図としたデザイン: 大学のゼミの魅力を新入生に伝えるという目的をたて、ゼミ選びに悩む学生の視点に立ち、「ゼミの活動風景」や「活動内容」といったコンテンツを重視。情報を整理し、直感的に比較できるよう、活動内容ごとのフィルタ機能やカード形式のレイアウトを設計しました。また遊び心として、先生方の知られざる魅力を知ることができるプロフィール帳の実装もしています。",
+                "得られた学び: グループ制作における進捗管理、メンバーとの円滑なコミュニケーションの重要性を学び、チーム開発の経験を積むことができました。"
             ],
-            link: "zemisite/zemisyoukai.html",
-            images: ["image/webzemi.png",
-                "image/スクリーンショット 2025-06-28 16.54.24.png",
-                "image/スクリーンショット 2025-06-28 16.54.44.png",
-                "image/スクリーンショット 2025-06-28 16.55.08.png",
-                "image/スクリーンショット 2025-06-28 16.46.30.png",
-                "image/スクリーンショット 2025-06-28 16.56.17.png",
-                "image/スクリーンショット 2025-06-28 16.55.45.png",
-                "image/スクリーンショット 2025-06-28 16.56.32.png",
-                "image/スクリーンショット 2025-06-28 16.56.49.png",
-                "image/スクリーンショット 2025-06-28 16.55.28.png",
-
-            ]
+            link: "zemisite/index.html",
+            images: [
+                "image/スクリーンショット 2025-08-18 23.54.36.png",
+                "image/スクリーンショット 2025-08-18 23.55.35.png",
+                "image/スクリーンショット 2025-08-18 23.55.42.png",
+                "image/スクリーンショット 2025-08-18 23.56.33.png",
+                "image/スクリーンショット 2025-08-18 23.57.10.png",
+                "image/スクリーンショット 2025-08-18 23.57.39.png",
+                "image/スクリーンショット 2025-08-18 23.57.44.png",
+                "image/スクリーンショット 2025-08-18 23.57.44.png",
+            ],
+            display_mode: "fit"
         },
         "flyer-design": {
             type: "image",
-            title: ["フライヤーデザイン"],
-            description: "架空のバンドライブ告知用フライヤーデザインです。情報の優先順位を整理し、見る人に伝えたい内容が一目で分かるよう構成しました。クリエイティブな表現を通じて視覚的なインパクトを追求しています。",
+            category: "dtp-design",
+            title: "フライヤーデザイン",
+            description: "架空のロックバンド「Desteny Hopper」の1stライブ告知用フライヤーデザインです。バンドの世界観をビジュアルで表現し、集客を促すことを目的として制作しました。",
             info: [
-                "技術: Adobe Illustrator, Adobe Photoshop",
-                "制作年月: 2025年5月",
-                "制作時間: 約3時間",
-                "ポイント: ターゲット層の音楽ジャンルや雰囲気を意識した色使いやタイポグラフィで、視線誘導と訴求力を強化しました。ライブの興奮を伝えるためのダイナミックなレイアウトに挑戦しました。"
+                "サイズ: B6",
+                "制作開始時期: 2025.7",
+                "製作講義: DTP",
+                "ターゲット: バンドに興味がある人、フライヤーを受け取ってくれた人",
+                "使用ツール: Adobe Illustrator, Adobe Photoshop",
+                "制作期間: 約5時間",
+                "意図としたデザイン: ライブの疾走感やエネルギーを表現するエフェクトやテクスチャを多用。ライブの雰囲気が伝わるような、迫力ある構図とタイポグラフィに挑戦しました。",
+                "得られた学び: 既存のブランドイメージ（この場合は架空のバンド）を汲み取り、それをデザインに落とし込む重要性を学びました。"
             ],
             images: [
                 "image/DTP_flyer_001_表_B6.png",
                 "image/DTP_flyer_001_裏_B6.png"
-            ]
+            ],
+            display_mode: "fit"
         },
         "website-design-xd-aquarium": {
             type: "image",
+            category: "web-design",
             title: "デザインカンプ（架空水族館）",
-            description: "Figmaを用いて、特定のテーマに基づいたWebサイトのデザイン提案を行いました。ポップで楽しげなデザイン要素を取り入れ、水族館の魅力を最大限に引き出すことを目指しました。特に、家族層が直感的に楽しめるようなUI/UXを意識しています。",
+            description: "Figmaを用いて、架空の水族館「Aqua Realm」のウェブサイトデザインカンプを制作しました。非日常感と楽しさを両立させたUI/UXを意識しています。",
             info: [
-                "技術: Figma",
-                "制作年月: 2023年7月",
-                "制作時間: 約7時間",
-                "ポイント: シンプルながらも目を引くビジュアルと、訪問者に楽しさを伝えるためのアイコンの活用をしました。水族館の多様な生き物を表現する、鮮やかで生命力あふれる色彩設計を目指しました。"
+                "制作開始時期: 2023.7",
+                "製作講義: Webデザイン基礎演習",
+                "ターゲット: 家族連れ、カップル、サイト閲覧者",
+                "使用ツール: Figma",
+                "制作期間: 約7時間",
+                "意図としたデザイン: 「海の世界」をコンセプトに、明るい青色を基調としたカラーパレットと、水滴をイメージしたUIエレメントを使用。ターゲット層が直感的に楽しめるよう、アイコンや視覚的な楽しさを伝える要素を取り入れました。",
+                "得られた学び: ターゲットの感情に訴えかける「コンセプト」がデザインの軸となること、そしてFigmaを用いた効率的なデザイン作成プロセスを習得しました。"
             ],
-            images: ["image/07-01_s2321086.png"]
+            images: ["image/07-01_s2321086.png"],
+            display_mode: "zoom"
         },
         "fake-cafe-website-design": {
             type: "image",
+            category: "web-design",
             title: "デザインカンプ（架空カフェ）",
-            description: "Figmaで作成した、架空のカフェのWebサイトデザインカンプです。ユーザーエクスペリエンスと視覚的な魅力を両立させることを目指し、温かみのあるブランドイメージと快適な閲覧体験を表現しました。",
+            description: "Figmaで作成した、温かみのあるブランドイメージと快適な閲覧体験を表現したカフェのウェブサイトデザインカンプです。",
             info: [
-                "技術: Figma",
-                "制作年月: 2023年5月",
-                "制作時間: 約8時間",
-                "ポイント: 「来店」を促すユーザー導線を考慮したレイアウト設計。カフェの温かみと上質さを伝えるブラウン系とアースカラーを基調とした配色。視認性とデザイン性を両立させるため、タイポグラフィの選定に注力しました。"
+                "制作開始時期: 2023.6",
+                "製作講義: Webデザイン基礎演習",
+                "ターゲット: 20代後半から30代の猫またはカフェ愛好家",
+                "使用ツール: Figma",
+                "制作期間: 約8時間",
+                "意図としたデザイン: 「温かさ」をコンセプトに、ブラウン系を基調とした配色を採用。来店を促すためのユーザー導線を考慮し、メニューや店舗情報へのアクセスをスムーズにするレイアウトを設計しました。",
+                "得られた学び: 情報を整理し、ユーザーの行動を促すためのレイアウト設計の重要性を学びました。"
             ],
-            images: ["image/06-02-s2321086.png"]
+            images: ["image/06-02-s2321086.png"],
+            display_mode: "zoom"
         },
         "character-design-work": {
             type: "image",
+            category: "character-design",
             title: "キャラクターデザイン",
-            description: "北海道情報大学のオープンキャンパスに向けたオリジナルキャラクターを制作しました。学内のイベントで親しまれる存在となるよう、視覚的な魅力を追求し、様々なポーズや表情での応用を考慮しました。",
+            description: "大学のオープンキャンパス向けに制作したオリジナルキャラクターです。学内のイベントで親しまれる存在となることを目指しました。",
             info: [
-                "技術: Clip Studio Paint, Adobe Illustrator",
-                "制作年月: 2025年5月",
-                "制作時間: 約3日",
-                "ポイント: 配色や輪郭線の統一感に配慮し、親しみやすさとデフォルメのバランスを意識しました。複数視点での描画を通じて、世界観の一貫性と実用性のあるデザインを目指しました。"
+                "制作開始時期: 2025.5",
+                "製作講義: ゼミナールI",
+                "キャラクターの説明: まだなにものにもなれる可能性を持つ高校生から想起し、てくてく歩いて自分なりの姿を描いていけるようにと考えたキャラクター。キャッチコピーは「つなぐ、まなぶ、てくてく未来。」",
+                "モチーフ: AIテクノロジー＋江別市のれんが＋情報科学",
+                "想定ターゲット: 本学のオープンキャンパスに参加する高校生",
+                "使用ツール:Adobe Illustrator",
+                "制作期間: 約20日",
+                "意図としたデザイン: 未来への希望を表現する明るい色調を盛り込みました。多様なポーズや表情での応用を考慮し、誰でも描きやすいシンプルさとデフォルメのバランスを意識しました。",
+                "得られた学び: キャラクターデザインが、単なるイラストではなく、ブランドの顔として機能するための役割や、見る人に与える印象について深く考える機会となりました。"
             ],
             images: [
                 "image/kyarafront.png",
                 "image/kyaraback.png"
-            ]
+            ],
+            display_mode: "fit"
         },
         "poster-design-work": {
             type: "image",
+            category: "dtp-design",
             title: "ポスターデザイン",
-            description: "クリスマスシーズンに合わせた女性向けコスメ販促会の告知ポスターとして制作しました。華やかさと商品の魅力を最大限に引き立て、購買意欲を喚起するデザインを目指しました。",
+            description: "クリスマスシーズンに合わせた女性向けコスメ販促会の告知ポスターです。華やかさと商品の魅力を最大限に引き立て、購買意欲を喚起するデザインを目指しました。",
             info: [
-                "技術: Adobe Illustrator",
-                "制作年月: 2024年6月",
-                "制作時間: 約4時間",
-                "ポイント: クリスマスとコスメのテーマを融合させ、女性が購買意欲を掻き立てられるような、魅力的で洗練されたビジュアルを意識しました。暖色系の色彩や光沢感のある要素を取り入れ、ホリデーシーズンの特別感を演出しています。"
+                "制作開始時期: 2024.11",
+                "製作講義: 色彩・デザイン演習",
+                "サイズ: A1サイズ",
+                "ターゲット: 大切な人とクリスマスを過ごす予定の20代から40代の女性",
+                "使用ツール: Adobe Photoshop、Power point",
+                "制作期間: 約4時間",
+                "意図としたデザイン: クリスマスとコスメのテーマを融合させ、女性が心を奪われるような、魅力的で洗練されたビジュアルを意識しました。寒色系の色彩や光沢感のある要素を取り入れ、ホリデーシーズンの特別感や品のある女性らしさを演出しています。",
+                "得られた学び: ターゲットの購買意欲に直結するような、感情に訴えかけるビジュアル表現の重要性を学びました。"
             ],
-            images: ["image/広告課題.jpg"]
+            images: ["image/広告課題.jpg"],
+            display_mode: "fit"
         },
         "meisi1-design-work": {
             type: "image",
+            category: "dtp-design",
             title: "名刺デザイン",
-            description: "自身の名刺としてデザインしました。表面は情報を集約しつつもシンプルで視認性を重視し、裏面では親しみやすいイラストを用いて個性を表現しました。名刺交換の際に会話のきっかけとなるような工夫を凝らしています。",
+            description: "私が製作したイラストを使用することで、自身の個性を表現し、会話のきっかけとなることを目指した個人制作の名刺デザインです。見る人に「この人ともっと話してみたい」と感じさせるようなデザインを意識しました。",
             info: [
-                "技術: Adobe Illustrator, Clip Studio Paint",
-                "制作年月: 2025年4月",
-                "制作時間: 約2時間",
-                "ポイント: 表面は自身で製作した彩度の高いイラストを配置し、インパクトのある情報伝達を意識。裏面には自身のオリジナルイラストを配置することで、個人的なタッチと記憶に残るデザインを両立させました。"
+                "サイズ: 55×91mm（一般的な名刺サイズ）",
+                "製作開始時期: 2023.4",
+                "製作講義: ゼミナールI",
+                "ターゲット: 名刺交換をする相手（特にクリエイターや採用担当者）",
+                "使用ツール: Adobe Illustrator, Clip Studio Paint",
+                "制作期間: 約2時間",
+                "意図としたデザイン: 表面はシンプルに情報を集約し、裏面には自身で制作したイラストを配置。親しみやすいタッチで個性を伝え、名刺交換という場面をより楽しい体験にすることを目指しました。",
+                "得られた学び: 情報を伝えるだけでなく、コミュニケーションのツールとしてのデザインの役割を再認識しました。"
             ],
             images: [
                 "image/meisi_front.jpg",
                 "image/meisi_back.jpg"
-            ]
+            ],
+            display_mode: "fit"
         },
 
         "fake-banner-design-01": {
             type: "image",
-            title: "バナーデザイン",
-            description: "架空の飲み物のバナーをデザインしました。可愛らしさと商品の魅力を最大限に引き立て、購買意欲を喚起すしクーポンを使用したくなるように意識しました。",
+            category: "web-design",
+            title: "いちごスムージーのバナーデザイン",
+            description: "架空のいちごスムージーの販促バナーです。商品の新鮮さと美味しさを伝え、20円引きクーポンでお得感を演出することで、ユーザーの購買行動を促すことを目指しました。",
             info: [
-                "技術: Adobe Photoshop",
-                "制作年月: 2025年6月",
-                "制作時間: 約2時間",
+                "製作開始時期: 2025.6",
+                "ターゲット: 10代から20代の女性",
+                "使用ツール: Adobe Photoshop",
+                "制作期間: 約2時間",
+                "意図としたデザイン: 商品のフレッシュさや甘さを伝えるため、瑞々しい写真と明るい色彩を使用。クーポンというお得な情報を視覚的に強調し、クリックしたくなるようなUI設計を心がけました。",
+                "得られた学び: 限られたスペースで、最も伝えたい情報（ここでは商品とクーポン）を効果的に目立たせるための視覚的ヒエラルキーの設計を学びました。"
             ],
             images: [
                 "image/banner_strawberry-smoothie_001.jpg",
-            ]
+            ],
+            display_mode: "fit"
+        },
+
+        "fake-banner-design-02": {
+            type: "image",
+            category: "web-design",
+            title: "アパレルセールのバナーデザイン",
+            description: "夏のアパレルセールを告知する架空のバナーです。夏らしい開放的な雰囲気と「最大80%オフ」というお得感を前面に出し、ユーザーの購買意欲を高めるデザインを目指しました。",
+            info: [
+                "製作開始時期: 2025.8",
+                "ターゲット: 20代から30代の男性",
+                "使用ツール: Adobe Photoshop",
+                "制作期間: 約2時間",
+                "意図としたデザイン: 夏の青空や花々のモチーフを用いることで、季節感と軽快さを表現しました。セール情報である「MAX 80% OFF」を大きく配置し、ユーザーが瞬時にメリットを認識できるよう工夫しました。",
+                "得られた学び: ターゲットの好むスタイルやブランドの世界観をデザインに反映させる重要性を学びました。"
+            ],
+            images: [
+                "image/cloth_banner_001.jpg",
+            ],
+            display_mode: "fit"
+        },
+
+        "fake-baachan-website-design": {
+            type: "image",
+            category: "web-design",
+            title: "代行サービスサイトのデザインカンプ",
+            description: "架空の暮らしの代行サービスサイトのデザインカンプです。ユーザーの不安を解消し、安心感と信頼性を提供することで利用を促すデザインを目指しました。",
+            info: [
+                "製作開始時期: 2023.7",
+                "製作講義: Webデザイン基礎演習",
+                "ターゲット: 高齢者や、家事・雑務に時間を割けない多忙な世代",
+                "使用ツール: Adobe Photoshop",
+                "制作期間: 約2日",
+                "意図としたデザイン: 明るく温かみのある配色と、親しみやすいイラストを多用することで、サービスへの心理的なハードルを下げることを意識しました。特に、サービス内容を分かりやすく整理し、ユーザーが迷わずに情報にたどり着けるような導線を設計しています。",
+                "得られた学び: ターゲットの心理的なハードルを下げ、安心感を与えるためのデザインアプローチを学びました。UI/UX設計における、ユーザー視点での情報整理の重要性を再認識しました。"
+            ],
+            images: [
+                "image/04-02_s2321086 (1).png",
+                "image/05-02_s2321086.png",
+
+            ],
+            display_mode: "fit"
+        },
+
+        "package-design": {
+            type: "image",
+            category: "dtp-design",
+            title: "包装紙デザイン",
+            description: "贈る喜びを演出する、オリジナル包装紙のデザインです。ギフト商品の付加価値を高めることを目的として制作しました。",
+            info: [
+                "サイズ: A3サイズ",
+                "製作開始時期: 2025.7",
+                "製作講義: ゼミナールI",
+                "ターゲット: ファッション・雑貨店の顧客",
+                "使用ツール: Adobe Illustrator",
+                "制作期間: 約3時間",
+                "意図としたデザイン: どんな商品にも合わせやすいように、シンプルながらも洗練された模様を意識しました。ブランドのロゴと組み合わせることで、高級感と個性を両立させ、受け取った人が思わずSNSにアップしたくなるようなデザインを目指しました。",
+                "得られた学び: パッケージデザインが持つ、商品の価値を高める役割と、ブランドイメージを統一することの重要性を学びました。"
+            ],
+            images: [
+                "image/housousi.png",
+            ],
+            display_mode: "fit"
         }
     };
+
+
 
     // 詳細表示ボタンクリック時の処理
     document.querySelectorAll('.view-details-button').forEach(button =>
@@ -725,6 +847,16 @@ document.addEventListener('DOMContentLoaded', () =>
                 modalLink.classList.add('hidden');
             }
 
+            // 作品の表示モードに応じてCSSクラスを切り替え
+            const modalImageContainer = document.querySelector('.modal-image-container');
+            if (work.display_mode === "fit")
+            {
+                modalImageContainer.classList.add('fit');
+            } else
+            {
+                modalImageContainer.classList.remove('fit');
+            }
+
             // モーダルを表示し、スクロールを無効化
             workModal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -752,6 +884,28 @@ document.addEventListener('DOMContentLoaded', () =>
         {
             closeModal();
         }
+    });
+    const pageTopBtn = document.getElementById('page-top-btn');
+
+    // スクロールに応じて表示・非表示
+    window.addEventListener('scroll', () =>
+    {
+        if (window.scrollY > 100)
+        {
+            pageTopBtn.classList.add('show');
+        } else
+        {
+            pageTopBtn.classList.remove('show');
+        }
+    });
+
+    // ボタンクリックでトップへスムーススクロール
+    pageTopBtn.addEventListener('click', () =>
+    {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 
 });
