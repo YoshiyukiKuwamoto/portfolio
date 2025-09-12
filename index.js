@@ -769,29 +769,6 @@ document.addEventListener('DOMContentLoaded', () =>
             ],
         },
 
-        "package-design-work": {
-            type: "image",
-            category: "dtp-design",
-            title: "包装紙デザイン",
-            description: "贈る喜びを演出する、オリジナル包装紙のデザインです。ギフト商品の付加価値を高めることを目的として制作しました。",
-            info: [
-                "サイズ: A3",
-                "製作開始時期: 2025年7月",
-                "製作講義: ゼミナールI",
-                "ターゲット: ファッション・雑貨店の顧客",
-                "使用ツール: Adobe Illustrator",
-                "制作期間: 約3時間",
-                "意図としたデザイン: どんな商品にも合わせやすいように、シンプルながらも洗練された模様を意識しました。ブランドのロゴと組み合わせることで、高級感と個性を両立させ、受け取った人が思わずSNSにアップしたくなるようなデザインを目指しました。",
-                "得られた学び: パッケージデザインが持つ、商品の価値を高める役割と、ブランドイメージを統一することの重要性を学びました。"
-            ],
-            images: [
-                "image/housousi.png",
-            ],
-        }
-    };
-
-
-
     // 詳細表示ボタンクリック時の処理
     document.querySelectorAll('.view-details-button').forEach(button =>
     {
