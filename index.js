@@ -767,7 +767,8 @@ document.addEventListener('DOMContentLoaded', () =>
                 "image/05-02_s2321086.png",
 
             ],
-        },
+        }
+    };
 
     // 詳細表示ボタンクリック時の処理
     document.querySelectorAll('.view-details-button').forEach(button =>
