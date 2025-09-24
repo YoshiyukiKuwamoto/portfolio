@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>情報メディア学部ゼミ紹介サイト</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="main.js" defer></script>
+
+</head>
+
+
+<main id="mainContent">
+
+  <!--
+  <div id="password-overlay">
+    <div class="password-container">
+      <h2>パスワードを入力してください</h2>
+      <input type="password" id="password-input" placeholder="パスワード">
+      <button id="password-submit">閲覧</button>
+      <p id="password-error" class="error-message"></p>
+    </div>
+  </div>
+-->
+
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <!-- 左側：タイトル -->
+        <h1 class="site-title">ゼミ紹介サイト</h1>
+
+        <!-- 右側：プロフ帳 + ログイン状態 -->
+        <div class="header-right">
+          <div class="profile-dropdown">
+            <button id="profile-button">プロフ帳</button>
+            <ul id="profile-list" class="hidden"></ul>
+          </div>
+
+          <div class="login-container" id="auth-area">
+            <button id="login-button">ログイン</button>
+
+            <div id="user-info" style="display: none;" class="login-container">
+              <span id="username" class="user-button"></span>
+              <button id="logout-button">ログアウト</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+
+
+    <!-- ✅ プロフモーダルは header 外に置く -->
+    <div id="profile-modal" class="hidden">
+      <div class="profile-overlay"></div>
+      <div class="profile-content">
+        <button id="close-profile">×</button>
+        <h2 id="profile-title"></h2>
+        <img id="profile-image" src="" alt="ゼミプロフ" />
+        <button id="prev-profile" class="nav-button">&lt;</button>
+        <button id="next-profile" class="nav-button">&gt;</button>
+      </div>
+    </div>
+
+    <main>
+      <!-- スライドショー -->
+      <div class="slideshow-container" id="slideshow">
+        <div class="slideshow-track">
+          <img src="images/1749428878275 - 伊藤マーティ.jpg" alt="スライド1" />
+          <img src="images/1749428917271 - 伊藤マーティ.jpg" alt="スライド2" />
+          <img src="images/1749429011466 - 伊藤マーティ.jpg" alt="スライド3" />
+          <img src="images/imashsemi01 - 伊藤正彦.jpg" alt="スライド6" />
+          <img src="images/imashsemi02 - 伊藤正彦.jpg" alt="スライド7" />
+          <img src="images/imashsemi03 - 伊藤正彦.jpg" alt="スライド8" />
+          <img src="images/imashsemi04 - 伊藤正彦.jpg" alt="スライド9" />
+          <img src="images/imashsemi05 - 伊藤正彦.jpg" alt="スライド10" />
+          <img src="images/imashsemi06 - 伊藤正彦.jpg" alt="スライド11" />
+          <img src="images/_34A3024 (1) - 杉澤愛美.jpg" alt="スライド12" />
+          <img src="images/IMG_7513 - 杉澤愛美.JPG" alt="スライド13" />
+          <img src="images/PXL_20250603_082005826 - 杉澤愛美.jpg" alt="スライド14" />
+          <img src="images/PXL_20250514_052744519 - 柿並義宏.jpg" alt="スライド15" />
+          <img src="images/PXL_20250423_023010556 - 柿並義宏.jpg" alt="スライド16" />
+          <img src="images/PXL_20250415_054830099 - 柿並義宏.jpg" alt="スライド17" />
+          <img src="images/PXL_20241118_023334111 - 柿並義宏.jpg" alt="スライド18" />
+          <img src="images/PXL_20241118_020756367 - 柿並義宏.jpg" alt="スライド19" />
+          <img src="images/PXL_20241003_072415244 - 柿並義宏.jpg" alt="スライド20" />
+          <img src="images/IMG_5327 - 向田茂.JPG" alt="スライド21" />
+          <img src="images/IMG_4623 - 向田茂.jpg" alt="スライド22" />
+          <img src="images/IMG_4380 - 向田茂.jpg" alt="スライド23" />
+          <img src="images/GOzU-Heb0AAHpe- - 柿並義宏.jpg" alt="スライド24" />
+          <img src="images/Gi0s-j1bYAA2Avi - 柿並義宏.jpg" alt="スライド35" />
+          <img src="images/20250112_122130 - 柿並義宏.jpg" alt="スライド26" />
+          <img src="images/01 - 安田光孝.jpg" alt="スライド27" />
+          <img src="images/02 - 安田光孝.jpg" alt="スライド28" />
+          <img src="images/03 - 安田光孝.jpg" alt="スライ29" />
+          <img src="images/05 - 安田光孝.jpg" alt="スライド30" />
+          <img src="images/chika-lab_01 - 近澤潤.jpg" alt="スライド36" />
+          <img src="images/chika-lab_02 - 近澤潤.jpg" alt="スライド37" />
+          <img src="images/chika-lab_03 - 近澤潤.jpg" alt="スライド38" />
+          <img src="images/chika-lab_04 - 近澤潤.jpg" alt="スライド19" />
+          <img src="images/chika-lab_05 - 近澤潤.jpg" alt="スライド40" />
+          <img src="images/chika-lab_06 - 近澤潤.jpg" alt="スライド41" />
+          <img src="images/IMG_6801 - 平山晴花.png" alt="スライド42" />
+          <img src="images/IMG_6818 - 平山晴花.png" alt="スライド43" />
+          <img src="images/IMG_6884 - 平山晴花.png" alt="スライド44" />
+          <img src="images/SHIMADA_SEMI_BBQ - 島田英二.jpg" alt="スライド45" />
+          <img src="images/SHIMADA_SEMI_CAM1 - 島田英二.jpg" alt="スライド46" />
+          <img src="images/SHIMADA_SEMI_CDIO - 島田英二.jpg" alt="スライ46" />
+          <img src="images/SHIMADA_SEMI_SHOOT4 - 島田英二.jpg" alt="スライド47" />
+          <img src="images/yumulab-semi - 湯村翼.jpeg" alt="スライド48" />
+          <img src="images/yumulabエスコン - 湯村翼.jpg" alt="スライド49" />
+          <img src="images/yumulab合宿 - 湯村翼.jpg" alt="スライド50" />
+          <img src="images/yumulab集合写真 - 湯村翼.jpg" alt="スライド51" />
+          <img src="images/yumulab卒展 - 湯村翼.jpg" alt="スライド52" />
+          <img src="images/yumulab卒展 - 湯村翼.jpg" alt="スライド53" />
+          <img src="images/河原ゼミ写真_001 - 河原大.png" alt="スライド54" />
+          <img src="images/河原ゼミ写真_002 - 河原大.png" alt="スライド55" />
+          <img src="images/河原ゼミ写真_003 - 河原大.png" alt="スライド57" />
+          <img src="images/photo1 - 坂本牧葉.png" alt="スライド58" />
+          <img src="images/photo2 - 坂本牧葉.png" alt="スライド59" />
+          <img src="images/photo3 - 坂本牧葉.png" alt="スライド60" />
+          <img src="images/photo4 - 坂本牧葉.png" alt="スライド61" />
+          <!-- 以下はループ感を出すためのクローン -->
+          <img src="images/1749428878275 - 伊藤マーティ.jpg" alt="スライド1" />
+          <img src="images/1749428917271 - 伊藤マーティ.jpg" alt="スライド2" />
+          <img src="images/1749429011466 - 伊藤マーティ.jpg" alt="スライド3" />
+          <img src="images/imashsemi01 - 伊藤正彦.jpg" alt="スライド6" />
+          <img src="images/imashsemi02 - 伊藤正彦.jpg" alt="スライド7" />
+          <img src="images/imashsemi03 - 伊藤正彦.jpg" alt="スライド8" />
+          <img src="images/imashsemi04 - 伊藤正彦.jpg" alt="スライド9" />
+          <img src="images/imashsemi05 - 伊藤正彦.jpg" alt="スライド10" />
+          <img src="images/imashsemi06 - 伊藤正彦.jpg" alt="スライド11" />
+          <img src="images/_34A3024 (1) - 杉澤愛美.jpg" alt="スライド12" />
+          <img src="images/IMG_7513 - 杉澤愛美.JPG" alt="スライド13" />
+          <img src="images/PXL_20250603_082005826 - 杉澤愛美.jpg" alt="スライド14" />
+          <img src="images/PXL_20250514_052744519 - 柿並義宏.jpg" alt="スライド15" />
+          <img src="images/PXL_20250423_023010556 - 柿並義宏.jpg" alt="スライド16" />
+          <img src="images/PXL_20250415_054830099 - 柿並義宏.jpg" alt="スライド17" />
+          <img src="images/PXL_20241118_023334111 - 柿並義宏.jpg" alt="スライド18" />
+          <img src="images/PXL_20241118_020756367 - 柿並義宏.jpg" alt="スライド19" />
+          <img src="images/PXL_20241003_072415244 - 柿並義宏.jpg" alt="スライド20" />
+          <img src="images/IMG_5327 - 向田茂.JPG" alt="スライド21" />
+          <img src="images/IMG_4623 - 向田茂.jpg" alt="スライド22" />
+          <img src="images/IMG_4380 - 向田茂.jpg" alt="スライド23" />
+          <img src="images/GOzU-Heb0AAHpe- - 柿並義宏.jpg" alt="スライド24" />
+          <img src="images/Gi0s-j1bYAA2Avi - 柿並義宏.jpg" alt="スライド35" />
+          <img src="images/20250112_122130 - 柿並義宏.jpg" alt="スライド26" />
+          <img src="images/01 - 安田光孝.jpg" alt="スライド27" />
+          <img src="images/02 - 安田光孝.jpg" alt="スライド28" />
+          <img src="images/03 - 安田光孝.jpg" alt="スライ29" />
+          <img src="images/05 - 安田光孝.jpg" alt="スライド30" />
+          <img src="images/chika-lab_01 - 近澤潤.jpg" alt="スライド36" />
+          <img src="images/chika-lab_02 - 近澤潤.jpg" alt="スライド37" />
+          <img src="images/chika-lab_03 - 近澤潤.jpg" alt="スライド38" />
+          <img src="images/chika-lab_04 - 近澤潤.jpg" alt="スライド19" />
+          <img src="images/chika-lab_05 - 近澤潤.jpg" alt="スライド40" />
+          <img src="images/chika-lab_06 - 近澤潤.jpg" alt="スライド41" />
+          <img src="images/IMG_6801 - 平山晴花.png" alt="スライド42" />
+          <img src="images/IMG_6818 - 平山晴花.png" alt="スライド43" />
+          <img src="images/IMG_6884 - 平山晴花.png" alt="スライド44" />
+          <img src="images/SHIMADA_SEMI_BBQ - 島田英二.jpg" alt="スライド45" />
+          <img src="images/SHIMADA_SEMI_CAM1 - 島田英二.jpg" alt="スライド46" />
+          <img src="images/SHIMADA_SEMI_CDIO - 島田英二.jpg" alt="スライ46" />
+          <img src="images/SHIMADA_SEMI_SHOOT4 - 島田英二.jpg" alt="スライド47" />
+          <img src="images/yumulab-semi - 湯村翼.jpeg" alt="スライド48" />
+          <img src="images/yumulabエスコン - 湯村翼.jpg" alt="スライド49" />
+          <img src="images/yumulab合宿 - 湯村翼.jpg" alt="スライド50" />
+          <img src="images/yumulab集合写真 - 湯村翼.jpg" alt="スライド51" />
+          <img src="images/yumulab卒展 - 湯村翼.jpg" alt="スライド52" />
+          <img src="images/yumulab卒展 - 湯村翼.jpg" alt="スライド53" />
+          <img src="images/河原ゼミ写真_001 - 河原大.png" alt="スライド54" />
+          <img src="images/河原ゼミ写真_002 - 河原大.png" alt="スライド55" />
+          <img src="images/河原ゼミ写真_003 - 河原大.png" alt="スライド57" />
+          <img src="images/photo1 - 坂本牧葉.png" alt="スライド58" />
+          <img src="images/photo2 - 坂本牧葉.png" alt="スライド59" />
+          <img src="images/photo3 - 坂本牧葉.png" alt="スライド60" />
+          <img src="images/photo4 - 坂本牧葉.png" alt="スライド61" />
+        </div>
+      </div>
+      <div class="header">
+        <h1 class="moji">ゼミを探す</h1>
+        <!-- 並び替えポップアップ -->
+        <button id="filter-button"></button>
+      </div>
+
+      <div id="filter" class="filter">
+
+        <!-- 並び替えポップアップ -->
+        <div id="sort-popup" class="sort-popup">
+          <!-- 🔁 タブ切り替えボタン -->
+          <div class="tab-buttons">
+            <button class="tab-btn selected" data-tab="basic">並べ替え</button>
+            <button class="tab-btn" data-tab="match">活動傾向</button>
+          </div>
+
+          <!-- 🔁 並び替えパネル -->
+          <div class="sort-popup-content">
+
+            <!-- 📄 基本ソートパネル -->
+            <div id="basic-sort-panel" class="tab-panel active">
+              <h2 class="sort-title">並び順</h2>
+              <div class="sort-options">
+                <button class="sort-button sort-type" data-sort="lab-number">研究室</button>
+                <button class="sort-button sort-type" data-sort="name">教員名</button>
+                <button class="sort-button sort-type" data-sort="favorite" style="display: none;">お気に入り</button>
+
+              </div>
+              <h2 class="sort-title">昇降順</h2>
+              <div class="sort-options">
+                <button class="sort-button sort-type" data-order="desc">降順</button>
+                <button class="sort-button sort-type" data-order="asc">昇順</button>
+              </div>
+              <div class="sort-actions">
+                <button id="reset-sort">リセット</button>
+                <button id="apply-sort">並べ替え</button>
+              </div>
+            </div>
+
+            <!-- 🧭 活動傾向ソートパネル -->
+            <div id="match-sort-panel" class="tab-panel" style="display: none;">
+              <h2 class="sort-title">活動傾向フィルタ</h2>
+
+              <div class="sort-options">
+                <button class="match-button" data-key="場所別活動比重" data-index="0">校内活動が多い</button>
+                <button class="match-button" data-key="場所別活動比重" data-index="1">校外活動が多い</button>
+              </div>
+
+              <div class="sort-options">
+                <button class="match-button" data-key="個人・団体の活動比重" data-index="0">個人作業が多い</button>
+                <button class="match-button" data-key="個人・団体の活動比重" data-index="1">団体作業が多い</button>
+              </div>
+
+              <div class="sort-options">
+                <button class="match-button" data-key="制作・研究比重" data-index="0">制作が多い</button>
+                <button class="match-button" data-key="制作・研究比重" data-index="1">研究が多い</button>
+              </div>
+
+              <div class="sort-actions">
+                <div class="filter-group">
+                  <button id="match-reset-button" class="reset-button hidden">リセット</button>
+                  <button id="match-sort-button">一致度で並べ替え</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <!-- 検索 -->
+        <div class="search-section">
+          <p class="search-info">検索と一致したゼミ名を表示できます。</p>
+          <p class="search-info">漢字、または半角数字でご記入ください。</p>
+          <div class="search-container">
+            <input type="text" id="search-input" placeholder="ゼミ担当者名、または研究室番号で検索" class="search-box" />
+            <div class="button-group">
+              <button id="search-button">検索</button>
+              <button id="reset-button" style="display: none;">リセット</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="search-error" class="search-error">候補が見つかりませんでした</div>
+        <div class="card-container" id="card-container"></div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="site-footer">
+      <p>&copy; 2025 プロジェクトトライアルチーム楓</p>
+    </footer>
+
+    <!-- ログイン必要ポップアップ -->
+    <div id="login-required-modal" class="sort-popup" style="display: none;"> <!-- 修正 -->
+      <div class="sort-popup-content">
+        <p>お気に入り機能を利用するには、ログインまたは新規登録が必要です。</p>
+        <button id="login-modal-trigger">ログイン・新規登録</button>
+        <button id="close-login-required">閉じる</button>
+      </div>
+    </div>
+
+    <!-- ログインモーダル -->
+    <div id="login-modal" class="sort-popup" style="display: none;">
+      <div class="modal-overlay" id="login-modal-overlay"></div>
+      <div class="sort-popup-content">
+        <button id="close-login-modal"
+          style="align-self: flex-end; background-color: red; color: white; border: none; font-size: 20px; cursor: pointer;">×</button>
+
+        <!-- タブ -->
+        <div style="display: flex; justify-content: center; gap: 10px;">
+          <button id="switch-to-login" class="active" style="padding: 8px 16px;">ログイン</button>
+          <button id="switch-to-signup" style="padding: 8px 16px;">新規登録</button>
+        </div>
+
+
+
+        <!-- ログインフォーム -->
+        <div id="login-form" class="auth-form">
+          <h2>ログイン</h2>
+          <input type="text" id="login-email" placeholder="メールアドレス">
+          <div class="password-field">
+            <input type="password" id="login-password" placeholder="パスワード">
+            <button type="button" class="toggle-password" data-target="login-password">表示</button>
+          </div>
+          <button id="confirm-login">ログイン</button>
+        </div>
+
+        <!-- 新規登録フォーム -->
+        <div id="signup-form" class="auth-form" style="display: none;">
+          <h2>新規登録</h2>
+          <input type="text" id="signup-name" placeholder="名前">
+          <input type="text" id="signup-email" placeholder="メールアドレス">
+          <div class="password-field">
+            <input type="password" id="signup-password" placeholder="パスワード">
+            <button type="button" class="toggle-password" data-target="signup-password">表示</button>
+          </div>
+          <button id="signup-button">登録</button>
+        </div>
+
+  </body>
+</main>
+
+</html>
