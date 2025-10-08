@@ -375,6 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalInfo = document.getElementById('modal-info');
     const modalLink = document.getElementById('modal-link');
 
+
     // 作品データ
     const works = {
 
@@ -395,6 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
             images: ["image/portfoliopic.png"],
         },
         "zemi-site": {
+            featured: true,
             type: "image",
             category: "web-coding",
             title: "ゼミ紹介サイト",
@@ -422,6 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ],
         },
         "flyer-design": {
+            featured: true,
             type: "image",
             category: "dtp-design",
             title: "フライヤーデザイン",
@@ -551,6 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         "fake-banner-design-02": {
+            featured: true,
             type: "image",
             category: "web-design",
             title: "アパレルセールのバナーデザイン",
@@ -689,5 +693,88 @@ document.addEventListener('DOMContentLoaded', () => {
             behavior: 'smooth'
         });
     });
+
+    // === おすすめ作品を独立表示 ===
+    const featuredContainer = document.getElementById('featured-works');
+
+    // worksオブジェクトからfeatured:trueの作品だけを抽出して表示
+    Object.entries(works)
+        .filter(([id, work]) => work.featured)
+        .forEach(([id, work]) => {
+            const div = document.createElement('div');
+            div.classList.add('featured-work-item');
+
+            // 画像（最初の1枚）
+            const img = document.createElement('img');
+            img.src = work.images[0];
+            img.alt = work.title;
+
+            // タイトル
+            const title = document.createElement('h3');
+            title.textContent = work.title;
+
+            // 説明
+            const desc = document.createElement('p');
+            desc.textContent = work.description;
+
+            // 詳しく見るボタン（既存のモーダル処理に対応）
+            const btn = document.createElement('button');
+            btn.textContent = '詳しく見る';
+            btn.classList.add('view-details-button');
+            btn.dataset.id = id;
+
+            // クリック時は既存のモーダル処理を流用
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const workId = btn.dataset.id;
+                const workData = works[workId];
+
+                modalTitle.textContent = workData.title;
+                modalDescription.textContent = workData.description;
+                modalInfo.innerHTML = '';
+                workData.info.forEach(info => {
+                    const li = document.createElement('li');
+                    li.textContent = info;
+                    modalInfo.appendChild(li);
+                });
+                modalImage.src = workData.images[0] || '';
+                modalImage.style.display = 'block';
+
+                modalThumbnailNav.innerHTML = '';
+                if (workData.images.length > 0) {
+                    workData.images.forEach((src, i) => {
+                        const thumb = document.createElement('img');
+                        thumb.src = src;
+                        thumb.classList.add('modal-thumbnail');
+                        if (i === 0) thumb.classList.add('active');
+                        thumb.addEventListener('click', () => {
+                            modalImage.src = src;
+                            document.querySelectorAll('.modal-thumbnail').forEach(t => t.classList.remove('active'));
+                            thumb.classList.add('active');
+                        });
+                        modalThumbnailNav.appendChild(thumb);
+                    });
+                }
+
+                if (workData.link) {
+                    modalLink.href = workData.link;
+                    modalLink.textContent = 'サイトを見る';
+                    modalLink.classList.remove('hidden');
+                } else {
+                    modalLink.classList.add('hidden');
+                }
+
+                workModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            // 要素をDOMに追加
+            div.appendChild(img);
+            div.appendChild(title);
+            div.appendChild(desc);
+            div.appendChild(btn);
+            featuredContainer.appendChild(div);
+        });
+
 
 });
