@@ -502,6 +502,13 @@ section h2::after {
 
 /* Works セクション */
 
+h1 {
+    font-size: 1.4rem;
+    color: #2c7ac1;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
 .works-intro {
     font-size: 1rem;
     color: #555;
