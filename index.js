@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', () =>
-{
+document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('nav a');
     const tapBtn = document.getElementById("tap-button");
     const loadingScreen = document.getElementById("loading-screen");
@@ -12,114 +11,33 @@ document.addEventListener('DOMContentLoaded', () =>
     const bottomPanel = document.querySelector('.loading-panel.bottom');
 
     const mainContent = document.querySelector('main');
-
     const particleContainer = document.getElementById('particle-container');
-    const passwordOverlay = document.getElementById('password-overlay');
-    const passwordInput = document.getElementById('password-input');
-    const passwordSubmit = document.getElementById('password-submit');
-    const passwordError = document.getElementById('password-error');
-    const passwordContainer = document.querySelector('.password-container');
-    let welcomeMessage = null;
 
-    const CORRECT_PASSWORD = "Marumaru_portfolio";
     setupCategoryFilters();
 
-    // サイトのメインコンテンツを初期状態で隠し、スクロールを無効化
+    // ✅ 初期状態でメインを非表示にしてローディング画面を表示
     mainContent.classList.add('hidden-content');
     document.body.style.overflow = 'hidden';
 
-    // パスワード入力フィールドがフォーカスされたらエラーメッセージとエラーボーダーを隠す
-    passwordInput.addEventListener('focus', () =>
-    {
-        passwordError.classList.remove('visible');
-        passwordError.textContent = '';
-        passwordInput.classList.remove('error');
-        passwordContainer.classList.remove('shake');
-    });
 
-    // パスワード送信処理
-    const checkPassword = () =>
-    {
-        if (passwordInput.value === CORRECT_PASSWORD)
-        {
-            // パスワードが正しい場合、パスワードコンテナを非表示にする
-            passwordContainer.style.display = 'none';
-
-            // 「ようこそ！」メッセージを生成して表示
-            welcomeMessage = document.createElement('p');
-            welcomeMessage.classList.add('welcome-message');
-            welcomeMessage.textContent = 'ようこそ！';
-            // 既存のwelcomeMessageがあれば削除する
-            if (passwordOverlay.querySelector('.welcome-message'))
-            {
-                passwordOverlay.querySelector('.welcome-message').remove();
-            }
-            // passwordOverlayの子要素として追加
-            passwordOverlay.appendChild(welcomeMessage);
-
-
-            // アニメーション後にオーバーレイを隠し、ローディング画面を開始
-            setTimeout(() =>
-            {
-                passwordOverlay.classList.add('hidden');
-                // ローディング画面のアニメーションを開始（ここではスクロール禁止を維持）
-                initializeLoadingScreen();
-            }, 1000);
-
-        } else
-        {
-            // パスワードが間違っている場合、エラーメッセージを表示し、視覚的なフィードバックを与える
-            passwordError.textContent = "パスワードが違います";
-            passwordError.classList.add('visible');
-            passwordInput.classList.add('error');
-            passwordContainer.classList.add('shake');
-            passwordInput.value = '';
-
-            // アニメーション後にshakeクラスを削除し、次回の揺れを可能にする
-            setTimeout(() =>
-            {
-                passwordContainer.classList.remove('shake');
-            }, 300);
-        }
-    };
-
-    passwordSubmit.addEventListener('click', checkPassword);
-    passwordInput.addEventListener('keypress', (e) =>
-    {
-        if (e.key === 'Enter')
-        {
-            checkPassword();
-        }
-    });
-
-    // 単一のパーティクルを作成する関数 (isBurstがtrueの場合、バースト用の速いアニメーション設定を適用)
-    const createParticle = (isBurst = false) =>
-    {
+    // パーティクル生成関数
+    const createParticle = (isBurst = false) => {
         const particle = document.createElement('div');
         particle.classList.add('particle');
 
-        // ランダムなサイズを設定 (5pxから25px)
         const size = Math.random() * 20 + 5;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
-
-        // ランダムな開始位置 (x軸) を設定
         particle.style.left = `${Math.random() * 100}%`;
 
-        let duration;
-        let delay;
-
-        if (isBurst)
-        {
-            // バースト用の速いアニメーション設定
+        let duration, delay;
+        if (isBurst) {
             duration = Math.random() * 1 + 0.6;
             delay = Math.random() * 0.1;
             particle.style.animationIterationCount = '1';
             particle.style.opacity = '1';
             particle.style.bottom = `${-size}px`;
-        } else
-        {
-            // 通常の背景パーティクル設定
+        } else {
             duration = Math.random() * 3 + 2;
             delay = Math.random() * (duration - 1);
             particle.classList.add('background-particle');
@@ -132,184 +50,122 @@ document.addEventListener('DOMContentLoaded', () =>
         particle.style.animationTimingFunction = 'ease-out';
         particle.style.animationDelay = `${delay}s`;
 
-        // パーティクルをコンテナに追加
         particleContainer.appendChild(particle);
 
-        // アニメーション終了後にパーティクルをDOMから削除し、メモリを解放 (主にburst用)
-        particle.addEventListener('animationend', () =>
-        {
-            if (isBurst)
-            {
+        particle.addEventListener('animationend', () => {
+            if (isBurst) {
                 particle.remove();
             }
         });
     };
 
-    // 最大パーティクル数を定義する定数と現在の数を追跡する変数
-    const MAX_PARTICLES = 50; // ここで最大表示数を設定します
-    let particleCount = 0; // 現在のパーティクル数を追跡するためのカウンター
+    const MAX_PARTICLES = 50;
+    let particleCount = 0;
 
-    // ローディング画面のアニメーションを初期化する関数
-    const initializeLoadingScreen = () =>
-    {
-        // ローディング画面を表示状態にする
+    // ✅ ローディング画面初期化関数
+    const initializeLoadingScreen = () => {
         loadingScreen.classList.add('visible');
-        // 初期パーティクル生成を有効化
-        let particleInterval = setInterval(() =>
-        {
-            // 最大数に達したら生成を停止
-            if (particleCount >= MAX_PARTICLES)
-            {
+
+        // パーティクルを生成
+        let particleInterval = setInterval(() => {
+            if (particleCount >= MAX_PARTICLES) {
                 clearInterval(particleInterval);
                 return;
             }
             createParticle();
-            particleCount++; // カウンターをインクリメント
+            particleCount++;
         }, 200);
 
-        // PC表示の場合にTAPをCLICKに変更する
-        const setButtonText = () =>
-        {
-            if (window.innerWidth > 480)
-            {
-                tapBtn.textContent = "CLICK";
-            } else
-            {
-                tapBtn.textContent = "TAP";
-            }
+        // デバイスに応じてTAP or CLICK
+        const setButtonText = () => {
+            tapBtn.textContent = window.innerWidth > 480 ? "CLICK" : "TAP";
         };
-
-        // 初期ロード時に設定し、ウィンドウのリサイズ時にも更新する
         setButtonText();
         window.addEventListener('resize', setButtonText);
 
-        // ローディング画面の初期アニメーションを適用する関数
-        const animateTextPanels = () =>
-        {
-            // パネルのアニメーションクラスを適用
+        // 初期アニメーション
+        const animateTextPanels = () => {
             topPanel.classList.add('animate-right-to-left');
             middlePanel.classList.add('animate-left-to-right');
             bottomPanel.classList.add('animate-right-to-left');
 
-            // 円のフェードインアニメーションを開始
             if (outerCircle) outerCircle.classList.add('fade-in');
-
-            setTimeout(() =>
-            {
-                if (innerCircle) innerCircle.classList.add('fade-in');
-            }, 1000);
-
-            setTimeout(() =>
-            {
-                if (tapBtn) tapBtn.classList.add('fade-in');
-            }, 2000);
+            setTimeout(() => { if (innerCircle) innerCircle.classList.add('fade-in'); }, 1000);
+            setTimeout(() => { if (tapBtn) tapBtn.classList.add('fade-in'); }, 2000);
         };
-
-        // ローディング画面の初期アニメーションを開始
         animateTextPanels();
 
-        // TAP/CLICKボタンクリック時の処理
-        const handleTapClick = () =>
-        {
-            // ローディング画面をフェードアウトさせる
+        // TAP/CLICK後の処理
+        const handleTapClick = () => {
             loadingScreen.classList.add('fade-out');
-
-            // パーティクルの生成を停止
             clearInterval(particleInterval);
 
-            // 既存の背景パーティクルをフェードアウトさせる処理
-            document.querySelectorAll('.background-particle').forEach(bgParticle =>
-            {
-                // 既存のアニメーションを停止し、現在の位置で固定
+            // 既存パーティクルをフェードアウト
+            document.querySelectorAll('.background-particle').forEach(bgParticle => {
                 const computedTransform = window.getComputedStyle(bgParticle).transform;
                 bgParticle.style.animation = 'none';
                 bgParticle.style.transform = computedTransform;
-
-                // フェードアウトアニメーションを適用 (少し上に移動しながら消える効果)
                 bgParticle.style.transition = 'opacity 1s ease-out, transform 1s ease-out';
                 bgParticle.style.opacity = '0';
                 bgParticle.style.transform = `${computedTransform} translateY(-50px)`;
-
-                // フェードアウト後、DOMから削除
-                setTimeout(() =>
-                {
-                    bgParticle.remove();
-                }, 1000);
+                setTimeout(() => bgParticle.remove(), 1000);
             });
 
-            // 大量のバブルを連続的に生成する処理 (バーストアニメーション)
+            // バーストアニメーション
             const totalBubbles = 500;
             const burstDuration = 500;
             const bubblesPerInterval = 5;
             let generatedBubbles = 0;
 
-            const burstInterval = setInterval(() =>
-            {
-                for (let i = 0; i < bubblesPerInterval; i++)
-                {
-                    if (generatedBubbles < totalBubbles)
-                    {
+            const burstInterval = setInterval(() => {
+                for (let i = 0; i < bubblesPerInterval; i++) {
+                    if (generatedBubbles < totalBubbles) {
                         createParticle(true);
                         generatedBubbles++;
-                    } else
-                    {
+                    } else {
                         clearInterval(burstInterval);
                         break;
                     }
                 }
             }, burstDuration / (totalBubbles / bubblesPerInterval));
 
-
-            // 円の要素を非表示にするアニメーション
+            // アニメーション終了 → メイン表示
             if (outerCircle) outerCircle.classList.add('reverse-circle-text');
             if (innerCircle) innerCircle.classList.add('reverse-circle-text');
-
-            // パネルのアニメーションを逆再生
             topPanel.classList.add('reverse-panel-top');
             middlePanel.classList.add('reverse-panel-middle');
             bottomPanel.classList.add('reverse-panel-bottom');
 
-            // SVGテキストアニメーションも逆再生
             const svgTexts = document.querySelectorAll('.loading-text-svg');
-            svgTexts.forEach((text) =>
-            {
-                text.classList.add('reverse-text-animation');
-            });
+            svgTexts.forEach((text) => text.classList.add('reverse-text-animation'));
 
-            // TAP/CLICKボタンをフェードアウト
-            if (tapBtn) tapBtn.classList.add('fade-out');
+            tapBtn.classList.add('fade-out');
 
-            // アニメーション終了後にローディング画面を完全に非表示にし、メインコンテンツを表示
-            setTimeout(() =>
-            {
+            setTimeout(() => {
                 loadingScreen.classList.add('hidden');
                 loadingScreen.style.pointerEvents = 'none';
-                document.body.style.overflow = ''; // スクロール禁止を解除
+                document.body.style.overflow = '';
                 mainContent.classList.remove('hidden-content');
                 mainContent.classList.add('visible-content');
-
-                // ヘッダーのタイピングアニメーションを開始
                 startHeaderTypingAnimation();
-
             }, 700);
         };
-        // TAP/CLICKボタンにイベントリスナーを設定
+
         tapBtn.addEventListener('click', handleTapClick);
     };
 
+    initializeLoadingScreen(); // 直接ローディングを起動
+
     // ヘッダーのタイピングアニメーション関連の関数
-    const startHeaderTypingAnimation = () =>
-    {
+    const startHeaderTypingAnimation = () => {
         const typingElements = document.querySelectorAll('.section-button span');
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}[]|:;"\'<>,.?/~`';
 
-        function getRandomChar()
-        {
+        function getRandomChar() {
             return characters[Math.floor(Math.random() * characters.length)];
         }
 
-        typingElements.forEach((span, index) =>
-        {
+        typingElements.forEach((span, index) => {
             const fullText = span.getAttribute('data-text');
             const totalTypingDuration = 1000;
             const randomCharDisplayDuration = 500;
@@ -330,42 +186,33 @@ document.addEventListener('DOMContentLoaded', () =>
             let charIndex = 0;
             const typeIntervalSpeed = totalTypingDuration / fullText.length;
 
-            setTimeout(() =>
-            {
+            setTimeout(() => {
                 span.innerHTML = '';
                 const animationStartTime = Date.now();
 
-                const typeAndRandomize = setInterval(() =>
-                {
+                const typeAndRandomize = setInterval(() => {
                     const elapsed = Date.now() - animationStartTime;
 
-                    if (elapsed < randomCharDisplayDuration)
-                    {
+                    if (elapsed < randomCharDisplayDuration) {
                         let currentHtml = '';
-                        for (let i = 0; i < fullText.length; i++)
-                        {
+                        for (let i = 0; i < fullText.length; i++) {
                             currentHtml += `<span style="opacity:0.7;">${getRandomChar()}</span>`;
                         }
                         span.innerHTML = currentHtml;
-                    } else if (charIndex < fullText.length)
-                    {
+                    } else if (charIndex < fullText.length) {
                         let typedPart = fullText.substring(0, charIndex + 1);
                         let randomPart = '';
-                        for (let i = charIndex + 1; i < fullText.length; i++)
-                        {
+                        for (let i = charIndex + 1; i < fullText.length; i++) {
                             randomPart += `<span style="opacity:0.7;">${getRandomChar()}</span>`;
                         }
                         span.innerHTML = typedPart + randomPart;
                         charIndex++;
-                    } else
-                    {
+                    } else {
                         clearInterval(typeAndRandomize);
                         span.textContent = fullText;
                         span.classList.add('typing-animation');
-                        span.addEventListener('animationend', (e) =>
-                        {
-                            if (e.animationName === 'typing')
-                            {
+                        span.addEventListener('animationend', (e) => {
+                            if (e.animationName === 'typing') {
                                 span.style.borderRightColor = 'transparent';
                             }
                         }, {
@@ -379,15 +226,12 @@ document.addEventListener('DOMContentLoaded', () =>
 
 
     // スムーススクロール機能
-    navLinks.forEach(link =>
-    {
-        link.addEventListener('click', (e) =>
-        {
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = link.getAttribute('href');
             const targetSection = document.querySelector(targetId);
-            if (targetSection)
-            {
+            if (targetSection) {
                 const headerOffset = document.querySelector('header').offsetHeight;
                 const elementPosition = targetSection.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.scrollY - headerOffset;
@@ -408,18 +252,13 @@ document.addEventListener('DOMContentLoaded', () =>
         threshold: 0.3
     };
 
-    const sectionObserver = new IntersectionObserver((entries) =>
-    {
-        entries.forEach(entry =>
-        {
-            if (entry.isIntersecting)
-            {
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
                 const currentSectionId = entry.target.id;
-                navLinks.forEach(link =>
-                {
+                navLinks.forEach(link => {
                     link.classList.remove('active');
-                    if (link.getAttribute('href').includes(currentSectionId))
-                    {
+                    if (link.getAttribute('href').includes(currentSectionId)) {
                         link.classList.add('active');
                     }
                 });
@@ -427,26 +266,21 @@ document.addEventListener('DOMContentLoaded', () =>
         });
     }, observerOptions);
 
-    sections.forEach(section =>
-    {
+    sections.forEach(section => {
         sectionObserver.observe(section);
     });
 
     // ページロード時に最初のセクションをアクティブにする
-    if (sections.length > 0)
-    {
-        navLinks.forEach(link =>
-        {
-            if (link.getAttribute('href').includes(sections[0].id))
-            {
+    if (sections.length > 0) {
+        navLinks.forEach(link => {
+            if (link.getAttribute('href').includes(sections[0].id)) {
                 link.classList.add('active');
             }
         });
     }
 
     // 別途DOMContentLoadedリスナー内でナビゲーションボタンのアクティブ状態を管理
-    document.addEventListener('DOMContentLoaded', () =>
-    {
+    document.addEventListener('DOMContentLoaded', () => {
         const sections = document.querySelectorAll('section');
         const navButtons = document.querySelectorAll('.section-button');
 
@@ -456,42 +290,34 @@ document.addEventListener('DOMContentLoaded', () =>
             threshold: 0.5
         };
 
-        const sectionObserver = new IntersectionObserver((entries) =>
-        {
-            entries.forEach(entry =>
-            {
-                if (entry.isIntersecting)
-                {
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
                     // すべてのボタンからactiveクラスを削除
                     navButtons.forEach(button => button.classList.remove('active'));
 
                     // 現在表示されているセクションに対応するボタンにactiveクラスを追加
                     const targetId = entry.target.id;
                     const correspondingButton = document.querySelector(`.section-button[href="#${targetId}"]`);
-                    if (correspondingButton)
-                    {
+                    if (correspondingButton) {
                         correspondingButton.classList.add('active');
                     }
                 }
             });
         }, observerOptions);
 
-        sections.forEach(section =>
-        {
+        sections.forEach(section => {
             sectionObserver.observe(section);
         });
 
         // スクロール時に手動でアクティブクラスを更新するイベントリスナーを追加
-        navButtons.forEach(button =>
-        {
-            button.addEventListener('click', function (e)
-            {
+        navButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').substring(1);
                 const targetSection = document.getElementById(targetId);
 
-                if (targetSection)
-                {
+                if (targetSection) {
                     // スムーズスクロール
                     window.scrollTo({
                         top: targetSection.offsetTop - document.querySelector('header').offsetHeight,
@@ -506,15 +332,12 @@ document.addEventListener('DOMContentLoaded', () =>
         });
     });
 
-    function setupCategoryFilters()
-    {
+    function setupCategoryFilters() {
         const categoryItems = document.querySelectorAll(".category-item");
         const workItems = document.querySelectorAll(".work-item");
 
-        categoryItems.forEach((categoryItem) =>
-        {
-            categoryItem.addEventListener("click", () =>
-            {
+        categoryItems.forEach((categoryItem) => {
+            categoryItem.addEventListener("click", () => {
                 const selectedCategory = categoryItem.getAttribute("data-filter");
 
                 // activeクラス切り替え
@@ -522,12 +345,10 @@ document.addEventListener('DOMContentLoaded', () =>
                 categoryItem.classList.add("active");
 
                 // 各work-itemの表示制御
-                workItems.forEach((workItem) =>
-                {
+                workItems.forEach((workItem) => {
                     const itemCategory = workItem.getAttribute("data-category");
 
-                    if (selectedCategory === "all" || itemCategory === selectedCategory)
-                    {
+                    if (selectedCategory === "all" || itemCategory === selectedCategory) {
                         workItem.style.display = "flex";
 
                         // 再表示時にアニメーションクラスを一度削除して再付与（連打対策）
@@ -535,8 +356,7 @@ document.addEventListener('DOMContentLoaded', () =>
                         void workItem.offsetWidth; // 強制再描画（リセット）
                         workItem.classList.add("fade-in-up");
 
-                    } else
-                    {
+                    } else {
                         workItem.style.display = "none";
                         workItem.classList.remove("fade-in-up");
                     }
@@ -771,10 +591,8 @@ document.addEventListener('DOMContentLoaded', () =>
     };
 
     // 詳細表示ボタンクリック時の処理
-    document.querySelectorAll('.view-details-button').forEach(button =>
-    {
-        button.addEventListener('click', (e) =>
-        {
+    document.querySelectorAll('.view-details-button').forEach(button => {
+        button.addEventListener('click', (e) => {
             e.stopPropagation();
             const workId = button.dataset.id;
             const work = works[workId];
@@ -784,8 +602,7 @@ document.addEventListener('DOMContentLoaded', () =>
             modalTitle.textContent = work.title;
             modalDescription.textContent = work.description;
             modalInfo.innerHTML = '';
-            work.info.forEach(info =>
-            {
+            work.info.forEach(info => {
                 const li = document.createElement('li');
                 li.textContent = info;
                 modalInfo.appendChild(li);
@@ -795,16 +612,13 @@ document.addEventListener('DOMContentLoaded', () =>
 
             // サムネイルナビゲーションを設定
             modalThumbnailNav.innerHTML = '';
-            if (work.images.length > 0)
-            {
-                work.images.forEach((src, i) =>
-                {
+            if (work.images.length > 0) {
+                work.images.forEach((src, i) => {
                     const thumb = document.createElement('img');
                     thumb.src = src;
                     thumb.classList.add('modal-thumbnail');
                     if (i === 0) thumb.classList.add('active');
-                    thumb.addEventListener('click', () =>
-                    {
+                    thumb.addEventListener('click', () => {
                         modalImage.src = src;
                         document.querySelectorAll('.modal-thumbnail').forEach(t => t.classList.remove('active'));
                         thumb.classList.add('active');
@@ -814,13 +628,11 @@ document.addEventListener('DOMContentLoaded', () =>
             }
 
             // リンクの表示/非表示を切り替える
-            if (work.link)
-            {
+            if (work.link) {
                 modalLink.href = work.link;
                 modalLink.textContent = 'サイトを見る';
                 modalLink.classList.remove('hidden');
-            } else
-            {
+            } else {
                 modalLink.href = '#';
                 modalLink.textContent = '';
                 modalLink.classList.add('hidden');
@@ -828,11 +640,9 @@ document.addEventListener('DOMContentLoaded', () =>
 
             // 作品の表示モードに応じてCSSクラスを切り替え
             const modalImageContainer = document.querySelector('.modal-image-container');
-            if (work.display_mode === "fit")
-            {
+            if (work.display_mode === "fit") {
                 modalImageContainer.classList.add('fit');
-            } else
-            {
+            } else {
                 modalImageContainer.classList.remove('fit');
             }
 
@@ -843,8 +653,7 @@ document.addEventListener('DOMContentLoaded', () =>
     });
 
     // モーダルを閉じる処理
-    const closeModal = () =>
-    {
+    const closeModal = () => {
         workModal.classList.remove('active');
         modalImage.src = '';
         modalThumbnailNav.innerHTML = '';
@@ -857,30 +666,24 @@ document.addEventListener('DOMContentLoaded', () =>
     modalCloseButton.addEventListener('click', closeModal);
 
     // モーダル背景クリックで閉じる
-    window.addEventListener('click', (e) =>
-    {
-        if (e.target === workModal)
-        {
+    window.addEventListener('click', (e) => {
+        if (e.target === workModal) {
             closeModal();
         }
     });
     const pageTopBtn = document.getElementById('page-top-btn');
 
     // スクロールに応じて表示・非表示
-    window.addEventListener('scroll', () =>
-    {
-        if (window.scrollY > 100)
-        {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
             pageTopBtn.classList.add('show');
-        } else
-        {
+        } else {
             pageTopBtn.classList.remove('show');
         }
     });
 
     // ボタンクリックでトップへスムーススクロール
-    pageTopBtn.addEventListener('click', () =>
-    {
+    pageTopBtn.addEventListener('click', () => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
