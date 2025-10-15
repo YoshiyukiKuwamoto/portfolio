@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () =>
       labNumber: 133,
       name: "杉澤",
       profile: "profile/ゼミプロフ帳(杉澤） - 杉澤愛美.jpg",
-      image: "images/_34A3024 (1) - 杉澤愛美.jpg",
+      image: "images/34A3024.jpg",
       favorite: false,
       barData: {
         "場所別活動比重": [50, 50],
