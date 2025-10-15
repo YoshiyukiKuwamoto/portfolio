@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () =>
     {
       id: 28,
       name: "安田",
-      profile: "profile/安田ゼミ_profile - 安田光孝.png",
+      profile: "profile/yasudaprofile.png",
       description: "Web/クリエイティブ業界での即戦力と人間力育成、業界ネットワーク形成に重きをおく。",
       image: "images/09 - 安田光孝.jpg",
       activity: "プロジェクト型ゼミで、学外課題をデザインとテックで解決する実践重視ゼミです。",
