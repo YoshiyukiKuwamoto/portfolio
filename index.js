@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () =>
             featured: true,
             type: "image",
             category: "web-design",
-            title: "アパレルセールのバナーデザイン",
+            title: "洋服セールのバナーデザイン",
             description: "夏のアパレルセールを告知する架空のバナーです。夏らしい開放的な雰囲気と「最大80%オフ」というお得感を前面に出し、ユーザーの購買意欲を高めるデザインを目指しました。",
             info: [
                 "製作開始時期: 2025年8月",
