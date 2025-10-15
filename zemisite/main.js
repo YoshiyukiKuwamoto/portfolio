@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () =>
       id: 28,
       labNumber: 135,
       name: "安田",
-      profile: "profile/安田ゼミ_profile - 安田光孝.png",
+      profile: "profile/yasudaprofile.png",
       image: "images/06 - 安田光孝.jpg",
       favorite: false,
       barData: {
