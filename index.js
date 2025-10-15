@@ -1,371 +1,22 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('nav a');
+document.addEventListener('DOMContentLoaded', () =>
+{
+    // --- 要素の取得 ---
+    // 修正: 'nav a' ではなく、ヘッダーボタンのクラス名 '.section-button' を使用
+    const navButtons = document.querySelectorAll('.section-button');
+    const sections = document.querySelectorAll('section');
+    const header = document.querySelector('header');
     const tapBtn = document.getElementById("tap-button");
     const loadingScreen = document.getElementById("loading-screen");
-
     const outerCircle = document.querySelector('.circle-text.outer');
     const innerCircle = document.querySelector('.circle-text.inner');
-
     const topPanel = document.querySelector('.loading-panel.top');
     const middlePanel = document.querySelector('.loading-panel.middle');
     const bottomPanel = document.querySelector('.loading-panel.bottom');
-
     const mainContent = document.querySelector('main');
     const particleContainer = document.getElementById('particle-container');
+    const pageTopBtn = document.getElementById('page-top-btn');
 
-    setupCategoryFilters();
-
-    // ✅ 初期状態でメインを非表示にしてローディング画面を表示
-    mainContent.classList.add('hidden-content');
-    document.body.style.overflow = 'hidden';
-
-
-    // パーティクル生成関数
-    const createParticle = (isBurst = false) => {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-
-        const size = Math.random() * 20 + 5;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${Math.random() * 100}%`;
-
-        let duration, delay;
-        if (isBurst) {
-            duration = Math.random() * 1 + 0.6;
-            delay = Math.random() * 0.1;
-            particle.style.animationIterationCount = '1';
-            particle.style.opacity = '1';
-            particle.style.bottom = `${-size}px`;
-        } else {
-            duration = Math.random() * 3 + 2;
-            delay = Math.random() * (duration - 1);
-            particle.classList.add('background-particle');
-            particle.style.animationIterationCount = 'infinite';
-            particle.style.bottom = `${-size}px`;
-        }
-
-        particle.style.animationDuration = `${duration}s`;
-        particle.style.animationName = 'floatUp';
-        particle.style.animationTimingFunction = 'ease-out';
-        particle.style.animationDelay = `${delay}s`;
-
-        particleContainer.appendChild(particle);
-
-        particle.addEventListener('animationend', () => {
-            if (isBurst) {
-                particle.remove();
-            }
-        });
-    };
-
-    const MAX_PARTICLES = 50;
-    let particleCount = 0;
-
-    // ✅ ローディング画面初期化関数
-    const initializeLoadingScreen = () => {
-        loadingScreen.classList.add('visible');
-
-        // パーティクルを生成
-        let particleInterval = setInterval(() => {
-            if (particleCount >= MAX_PARTICLES) {
-                clearInterval(particleInterval);
-                return;
-            }
-            createParticle();
-            particleCount++;
-        }, 200);
-
-        // デバイスに応じてTAP or CLICK
-        const setButtonText = () => {
-            tapBtn.textContent = window.innerWidth > 480 ? "CLICK" : "TAP";
-        };
-        setButtonText();
-        window.addEventListener('resize', setButtonText);
-
-        // 初期アニメーション
-        const animateTextPanels = () => {
-            topPanel.classList.add('animate-right-to-left');
-            middlePanel.classList.add('animate-left-to-right');
-            bottomPanel.classList.add('animate-right-to-left');
-
-            if (outerCircle) outerCircle.classList.add('fade-in');
-            setTimeout(() => { if (innerCircle) innerCircle.classList.add('fade-in'); }, 1000);
-            setTimeout(() => { if (tapBtn) tapBtn.classList.add('fade-in'); }, 2000);
-        };
-        animateTextPanels();
-
-        // TAP/CLICK後の処理
-        const handleTapClick = () => {
-            loadingScreen.classList.add('fade-out');
-            clearInterval(particleInterval);
-
-            // 既存パーティクルをフェードアウト
-            document.querySelectorAll('.background-particle').forEach(bgParticle => {
-                const computedTransform = window.getComputedStyle(bgParticle).transform;
-                bgParticle.style.animation = 'none';
-                bgParticle.style.transform = computedTransform;
-                bgParticle.style.transition = 'opacity 1s ease-out, transform 1s ease-out';
-                bgParticle.style.opacity = '0';
-                bgParticle.style.transform = `${computedTransform} translateY(-50px)`;
-                setTimeout(() => bgParticle.remove(), 1000);
-            });
-
-            // バーストアニメーション
-            const totalBubbles = 500;
-            const burstDuration = 500;
-            const bubblesPerInterval = 5;
-            let generatedBubbles = 0;
-
-            const burstInterval = setInterval(() => {
-                for (let i = 0; i < bubblesPerInterval; i++) {
-                    if (generatedBubbles < totalBubbles) {
-                        createParticle(true);
-                        generatedBubbles++;
-                    } else {
-                        clearInterval(burstInterval);
-                        break;
-                    }
-                }
-            }, burstDuration / (totalBubbles / bubblesPerInterval));
-
-            // アニメーション終了 → メイン表示
-            if (outerCircle) outerCircle.classList.add('reverse-circle-text');
-            if (innerCircle) innerCircle.classList.add('reverse-circle-text');
-            topPanel.classList.add('reverse-panel-top');
-            middlePanel.classList.add('reverse-panel-middle');
-            bottomPanel.classList.add('reverse-panel-bottom');
-
-            const svgTexts = document.querySelectorAll('.loading-text-svg');
-            svgTexts.forEach((text) => text.classList.add('reverse-text-animation'));
-
-            tapBtn.classList.add('fade-out');
-
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                loadingScreen.style.pointerEvents = 'none';
-                document.body.style.overflow = '';
-                mainContent.classList.remove('hidden-content');
-                mainContent.classList.add('visible-content');
-                startHeaderTypingAnimation();
-            }, 700);
-        };
-
-        tapBtn.addEventListener('click', handleTapClick);
-    };
-
-    initializeLoadingScreen(); // 直接ローディングを起動
-
-    // ヘッダーのタイピングアニメーション関連の関数
-    const startHeaderTypingAnimation = () => {
-        const typingElements = document.querySelectorAll('.section-button span');
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}[]|:;"\'<>,.?/~`';
-
-        function getRandomChar() {
-            return characters[Math.floor(Math.random() * characters.length)];
-        }
-
-        typingElements.forEach((span, index) => {
-            const fullText = span.getAttribute('data-text');
-            const totalTypingDuration = 1000;
-            const randomCharDisplayDuration = 500;
-
-            const tempSpan = document.createElement('span');
-            tempSpan.style.visibility = 'hidden';
-            tempSpan.style.position = 'absolute';
-            tempSpan.style.whiteSpace = 'nowrap';
-            tempSpan.textContent = fullText;
-            document.body.appendChild(tempSpan);
-            const finalWidth = tempSpan.offsetWidth;
-            document.body.removeChild(tempSpan);
-
-            span.style.setProperty('--final-width', `${finalWidth}px`);
-            span.style.setProperty('--typing-duration', `${totalTypingDuration / 1000}s`);
-            span.style.setProperty('--char-count', fullText.length);
-
-            let charIndex = 0;
-            const typeIntervalSpeed = totalTypingDuration / fullText.length;
-
-            setTimeout(() => {
-                span.innerHTML = '';
-                const animationStartTime = Date.now();
-
-                const typeAndRandomize = setInterval(() => {
-                    const elapsed = Date.now() - animationStartTime;
-
-                    if (elapsed < randomCharDisplayDuration) {
-                        let currentHtml = '';
-                        for (let i = 0; i < fullText.length; i++) {
-                            currentHtml += `<span style="opacity:0.7;">${getRandomChar()}</span>`;
-                        }
-                        span.innerHTML = currentHtml;
-                    } else if (charIndex < fullText.length) {
-                        let typedPart = fullText.substring(0, charIndex + 1);
-                        let randomPart = '';
-                        for (let i = charIndex + 1; i < fullText.length; i++) {
-                            randomPart += `<span style="opacity:0.7;">${getRandomChar()}</span>`;
-                        }
-                        span.innerHTML = typedPart + randomPart;
-                        charIndex++;
-                    } else {
-                        clearInterval(typeAndRandomize);
-                        span.textContent = fullText;
-                        span.classList.add('typing-animation');
-                        span.addEventListener('animationend', (e) => {
-                            if (e.animationName === 'typing') {
-                                span.style.borderRightColor = 'transparent';
-                            }
-                        }, {
-                            once: true
-                        });
-                    }
-                }, typeIntervalSpeed / 2);
-            }, index * 200);
-        });
-    }
-
-
-    // スムーススクロール機能
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            if (targetSection) {
-                const headerOffset = document.querySelector('header').offsetHeight;
-                const elementPosition = targetSection.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
-            }
-        });
-    });
-
-    // Intersection Observerでセクションがビューポートに入ったらボタンをアクティブにする
-    const sections = document.querySelectorAll('section');
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.3
-    };
-
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const currentSectionId = entry.target.id;
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href').includes(currentSectionId)) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-        });
-    }, observerOptions);
-
-    sections.forEach(section => {
-        sectionObserver.observe(section);
-    });
-
-    // ページロード時に最初のセクションをアクティブにする
-    if (sections.length > 0) {
-        navLinks.forEach(link => {
-            if (link.getAttribute('href').includes(sections[0].id)) {
-                link.classList.add('active');
-            }
-        });
-    }
-
-    // 別途DOMContentLoadedリスナー内でナビゲーションボタンのアクティブ状態を管理
-    document.addEventListener('DOMContentLoaded', () => {
-        const sections = document.querySelectorAll('section');
-        const navButtons = document.querySelectorAll('.section-button');
-
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.5
-        };
-
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // すべてのボタンからactiveクラスを削除
-                    navButtons.forEach(button => button.classList.remove('active'));
-
-                    // 現在表示されているセクションに対応するボタンにactiveクラスを追加
-                    const targetId = entry.target.id;
-                    const correspondingButton = document.querySelector(`.section-button[href="#${targetId}"]`);
-                    if (correspondingButton) {
-                        correspondingButton.classList.add('active');
-                    }
-                }
-            });
-        }, observerOptions);
-
-        sections.forEach(section => {
-            sectionObserver.observe(section);
-        });
-
-        // スクロール時に手動でアクティブクラスを更新するイベントリスナーを追加
-        navButtons.forEach(button => {
-            button.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetSection = document.getElementById(targetId);
-
-                if (targetSection) {
-                    // スムーズスクロール
-                    window.scrollTo({
-                        top: targetSection.offsetTop - document.querySelector('header').offsetHeight,
-                        behavior: 'smooth'
-                    });
-
-                    // クリックされたボタンにactiveクラスを付与
-                    navButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                }
-            });
-        });
-    });
-
-    function setupCategoryFilters() {
-        const categoryItems = document.querySelectorAll(".category-item");
-        const workItems = document.querySelectorAll(".work-item");
-
-        categoryItems.forEach((categoryItem) => {
-            categoryItem.addEventListener("click", () => {
-                const selectedCategory = categoryItem.getAttribute("data-filter");
-
-                // activeクラス切り替え
-                categoryItems.forEach((item) => item.classList.remove("active"));
-                categoryItem.classList.add("active");
-
-                // 各work-itemの表示制御
-                workItems.forEach((workItem) => {
-                    const itemCategory = workItem.getAttribute("data-category");
-
-                    if (selectedCategory === "all" || itemCategory === selectedCategory) {
-                        workItem.style.display = "flex";
-
-                        // 再表示時にアニメーションクラスを一度削除して再付与（連打対策）
-                        workItem.classList.remove("fade-in-up");
-                        void workItem.offsetWidth; // 強制再描画（リセット）
-                        workItem.classList.add("fade-in-up");
-
-                    } else {
-                        workItem.style.display = "none";
-                        workItem.classList.remove("fade-in-up");
-                    }
-                });
-            });
-        });
-    }
-
-    // モーダル関連のJavaScript
+    // モーダル関連要素
     const workModal = document.getElementById('work-modal');
     const modalCloseButton = document.querySelector('.modal-close-button');
     const modalImage = document.getElementById('modal-image');
@@ -375,10 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalInfo = document.getElementById('modal-info');
     const modalLink = document.getElementById('modal-link');
 
-
-    // 作品データ
     const works = {
-
         "my-portfolio": {
             type: "image",
             category: "web-coding",
@@ -419,8 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 "image/スクリーンショット 2025-08-18 23.56.33.png",
                 "image/スクリーンショット 2025-08-18 23.57.10.png",
                 "image/スクリーンショット 2025-08-18 23.57.39.png",
-                "image/スクリーンショット 2025-08-18 23.57.44.png",
-                "image/スクリーンショット 2025-08-18 23.57.44.png",
             ],
         },
         "flyer-design": {
@@ -594,9 +240,355 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+
+    setupCategoryFilters();
+
+    // ✅ 初期状態でメインを非表示にしてローディング画面を表示
+    mainContent.classList.add('hidden-content');
+    document.body.style.overflow = 'hidden';
+
+
+    // パーティクル生成関数
+    const createParticle = (isBurst = false) =>
+    {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+
+        const size = Math.random() * 20 + 5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+
+        let duration, delay;
+        if (isBurst)
+        {
+            duration = Math.random() * 1 + 0.6;
+            delay = Math.random() * 0.1;
+            particle.style.animationIterationCount = '1';
+            particle.style.opacity = '1';
+            particle.style.bottom = `${-size}px`;
+        } else
+        {
+            duration = Math.random() * 3 + 2;
+            delay = Math.random() * (duration - 1);
+            particle.classList.add('background-particle');
+            particle.style.animationIterationCount = 'infinite';
+            particle.style.bottom = `${-size}px`;
+        }
+
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationName = 'floatUp';
+        particle.style.animationTimingFunction = 'ease-out';
+        particle.style.animationDelay = `${delay}s`;
+
+        particleContainer.appendChild(particle);
+
+        particle.addEventListener('animationend', () =>
+        {
+            if (isBurst)
+            {
+                particle.remove();
+            }
+        });
+    };
+
+    const MAX_PARTICLES = 50;
+    let particleCount = 0;
+
+    // ✅ ローディング画面初期化関数
+    const initializeLoadingScreen = () =>
+    {
+        loadingScreen.classList.add('visible');
+
+        // パーティクルを生成
+        let particleInterval = setInterval(() =>
+        {
+            if (particleCount >= MAX_PARTICLES)
+            {
+                clearInterval(particleInterval);
+                return;
+            }
+            createParticle();
+            particleCount++;
+        }, 200);
+
+        // デバイスに応じてTAP or CLICK
+        const setButtonText = () =>
+        {
+            tapBtn.textContent = window.innerWidth > 480 ? "CLICK" : "TAP";
+        };
+        setButtonText();
+        window.addEventListener('resize', setButtonText);
+
+        // 初期アニメーション
+        const animateTextPanels = () =>
+        {
+            topPanel.classList.add('animate-right-to-left');
+            middlePanel.classList.add('animate-left-to-right');
+            bottomPanel.classList.add('animate-right-to-left');
+
+            if (outerCircle) outerCircle.classList.add('fade-in');
+            setTimeout(() => { if (innerCircle) innerCircle.classList.add('fade-in'); }, 1000);
+            setTimeout(() => { if (tapBtn) tapBtn.classList.add('fade-in'); }, 2000);
+        };
+        animateTextPanels();
+
+        // TAP/CLICK後の処理
+        const handleTapClick = () =>
+        {
+            loadingScreen.classList.add('fade-out');
+            clearInterval(particleInterval);
+
+            // 既存パーティクルをフェードアウト
+            document.querySelectorAll('.background-particle').forEach(bgParticle =>
+            {
+                const computedTransform = window.getComputedStyle(bgParticle).transform;
+                bgParticle.style.animation = 'none';
+                bgParticle.style.transform = computedTransform;
+                bgParticle.style.transition = 'opacity 1s ease-out, transform 1s ease-out';
+                bgParticle.style.opacity = '0';
+                bgParticle.style.transform = `${computedTransform} translateY(-50px)`;
+                setTimeout(() => bgParticle.remove(), 1000);
+            });
+
+            // バーストアニメーション
+            const totalBubbles = 500;
+            const burstDuration = 500;
+            const bubblesPerInterval = 5;
+            let generatedBubbles = 0;
+
+            const burstInterval = setInterval(() =>
+            {
+                for (let i = 0; i < bubblesPerInterval; i++)
+                {
+                    if (generatedBubbles < totalBubbles)
+                    {
+                        createParticle(true);
+                        generatedBubbles++;
+                    } else
+                    {
+                        clearInterval(burstInterval);
+                        break;
+                    }
+                }
+            }, burstDuration / (totalBubbles / bubblesPerInterval));
+
+            // アニメーション終了 → メイン表示
+            if (outerCircle) outerCircle.classList.add('reverse-circle-text');
+            if (innerCircle) innerCircle.classList.add('reverse-circle-text');
+            topPanel.classList.add('reverse-panel-top');
+            middlePanel.classList.add('reverse-panel-middle');
+            bottomPanel.classList.add('reverse-panel-bottom');
+
+            const svgTexts = document.querySelectorAll('.loading-text-svg');
+            svgTexts.forEach((text) => text.classList.add('reverse-text-animation'));
+
+            tapBtn.classList.add('fade-out');
+
+            setTimeout(() =>
+            {
+                loadingScreen.classList.add('hidden');
+                loadingScreen.style.pointerEvents = 'none';
+                document.body.style.overflow = '';
+                mainContent.classList.remove('hidden-content');
+                mainContent.classList.add('visible-content');
+                startHeaderTypingAnimation();
+            }, 700);
+        };
+
+        tapBtn.addEventListener('click', handleTapClick);
+    };
+
+    initializeLoadingScreen(); // 直接ローディングを起動
+
+    // ヘッダーのタイピングアニメーション関連の関数 (変更なし)
+    const startHeaderTypingAnimation = () =>
+    {
+        const typingElements = document.querySelectorAll('.section-button span');
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}[]|:;"\'<>,.?/~`';
+
+        function getRandomChar()
+        {
+            return characters[Math.floor(Math.random() * characters.length)];
+        }
+
+        typingElements.forEach((span, index) =>
+        {
+            const fullText = span.getAttribute('data-text');
+            const totalTypingDuration = 1000;
+            const randomCharDisplayDuration = 500;
+
+            const tempSpan = document.createElement('span');
+            tempSpan.style.visibility = 'hidden';
+            tempSpan.style.position = 'absolute';
+            tempSpan.style.whiteSpace = 'nowrap';
+            tempSpan.textContent = fullText;
+            document.body.appendChild(tempSpan);
+            const finalWidth = tempSpan.offsetWidth;
+            document.body.removeChild(tempSpan);
+
+            span.style.setProperty('--final-width', `${finalWidth}px`);
+            span.style.setProperty('--typing-duration', `${totalTypingDuration / 1000}s`);
+            span.style.setProperty('--char-count', fullText.length);
+
+            let charIndex = 0;
+            const typeIntervalSpeed = totalTypingDuration / fullText.length;
+
+            setTimeout(() =>
+            {
+                span.innerHTML = '';
+                const animationStartTime = Date.now();
+
+                const typeAndRandomize = setInterval(() =>
+                {
+                    const elapsed = Date.now() - animationStartTime;
+
+                    if (elapsed < randomCharDisplayDuration)
+                    {
+                        let currentHtml = '';
+                        for (let i = 0; i < fullText.length; i++)
+                        {
+                            currentHtml += `<span style="opacity:0.7;">${getRandomChar()}</span>`;
+                        }
+                        span.innerHTML = currentHtml;
+                    } else if (charIndex < fullText.length)
+                    {
+                        let typedPart = fullText.substring(0, charIndex + 1);
+                        let randomPart = '';
+                        for (let i = charIndex + 1; i < fullText.length; i++)
+                        {
+                            randomPart += `<span style="opacity:0.7;">${getRandomChar()}</span>`;
+                        }
+                        span.innerHTML = typedPart + randomPart;
+                        charIndex++;
+                    } else
+                    {
+                        clearInterval(typeAndRandomize);
+                        span.textContent = fullText;
+                        span.classList.add('typing-animation');
+                        span.addEventListener('animationend', (e) =>
+                        {
+                            if (e.animationName === 'typing')
+                            {
+                                span.style.borderRightColor = 'transparent';
+                            }
+                        }, {
+                            once: true
+                        });
+                    }
+                }, typeIntervalSpeed / 2);
+            }, index * 200);
+        });
+    }
+
+    // --- ヘッダーのアクティブ状態管理（works全体をひとまとめで反応させる） ---
+    const observerOptions = {
+        root: null,
+        // セクションの中央付近で切り替わるように設定
+        rootMargin: "-45% 0px -45% 0px",
+        threshold: 0,
+    };
+
+    const sectionObserver = new IntersectionObserver((entries) =>
+    {
+        entries.forEach((entry) =>
+        {
+            const id = entry.target.getAttribute("id");
+            let targetButtonSelector;
+
+            // worksの中身すべて（featured-works-section含む）で共通ボタンをアクティブに
+            if (id === "works" || id === "featured-works-section")
+            {
+                targetButtonSelector = '.section-button[href="#works"]';
+            } else
+            {
+                targetButtonSelector = `.section-button[href="#${id}"]`;
+            }
+
+            const correspondingButton = document.querySelector(targetButtonSelector);
+
+            if (entry.isIntersecting)
+            {
+                document.querySelectorAll(".section-button").forEach((btn) =>
+                    btn.classList.remove("active")
+                );
+                correspondingButton?.classList.add("active");
+            }
+        });
+    }, observerOptions);
+
+    // 各主要セクションを監視
+    sections.forEach((section) => sectionObserver.observe(section));
+
+    // --- ボタンをクリックしたときのスムーススクロール＋アクティブ切替 ---
+    navButtons.forEach((btn) =>
+    {
+        btn.addEventListener("click", (e) =>
+        {
+            e.preventDefault();
+            const targetId = btn.getAttribute("href");
+            const targetSection = document.querySelector(targetId);
+
+            if (targetSection)
+            {
+                window.scrollTo({
+                    top: targetSection.offsetTop - header.offsetHeight + 10,
+                    behavior: "smooth",
+                });
+
+                navButtons.forEach((b) => b.classList.remove("active"));
+                btn.classList.add("active");
+            }
+        });
+    });
+
+
+
+    function setupCategoryFilters()
+    {
+        const categoryItems = document.querySelectorAll(".category-item");
+        const workItems = document.querySelectorAll(".work-item");
+
+        categoryItems.forEach((categoryItem) =>
+        {
+            categoryItem.addEventListener("click", () =>
+            {
+                const selectedCategory = categoryItem.getAttribute("data-filter");
+
+                // activeクラス切り替え
+                categoryItems.forEach((item) => item.classList.remove("active"));
+                categoryItem.classList.add("active");
+
+                // 各work-itemの表示制御
+                workItems.forEach((workItem) =>
+                {
+                    const itemCategory = workItem.getAttribute("data-category");
+
+                    if (selectedCategory === "all" || itemCategory === selectedCategory)
+                    {
+                        workItem.style.display = "flex";
+
+                        // 再表示時にアニメーションクラスを一度削除して再付与（連打対策）
+                        workItem.classList.remove("fade-in-up");
+                        void workItem.offsetWidth; // 強制再描画（リセット）
+                        workItem.classList.add("fade-in-up");
+
+                    } else
+                    {
+                        workItem.style.display = "none";
+                        workItem.classList.remove("fade-in-up");
+                    }
+                });
+            });
+        });
+    }
+
+    // モーダル関連のJavaScript
     // 詳細表示ボタンクリック時の処理
-    document.querySelectorAll('.view-details-button').forEach(button => {
-        button.addEventListener('click', (e) => {
+    document.querySelectorAll('.view-details-button').forEach(button =>
+    {
+        button.addEventListener('click', (e) =>
+        {
             e.stopPropagation();
             const workId = button.dataset.id;
             const work = works[workId];
@@ -606,7 +598,8 @@ document.addEventListener('DOMContentLoaded', () => {
             modalTitle.textContent = work.title;
             modalDescription.textContent = work.description;
             modalInfo.innerHTML = '';
-            work.info.forEach(info => {
+            work.info.forEach(info =>
+            {
                 const li = document.createElement('li');
                 li.textContent = info;
                 modalInfo.appendChild(li);
@@ -616,13 +609,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // サムネイルナビゲーションを設定
             modalThumbnailNav.innerHTML = '';
-            if (work.images.length > 0) {
-                work.images.forEach((src, i) => {
+            if (work.images.length > 0)
+            {
+                work.images.forEach((src, i) =>
+                {
                     const thumb = document.createElement('img');
                     thumb.src = src;
                     thumb.classList.add('modal-thumbnail');
                     if (i === 0) thumb.classList.add('active');
-                    thumb.addEventListener('click', () => {
+                    thumb.addEventListener('click', () =>
+                    {
                         modalImage.src = src;
                         document.querySelectorAll('.modal-thumbnail').forEach(t => t.classList.remove('active'));
                         thumb.classList.add('active');
@@ -632,11 +628,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // リンクの表示/非表示を切り替える
-            if (work.link) {
+            if (work.link)
+            {
                 modalLink.href = work.link;
                 modalLink.textContent = 'サイトを見る';
                 modalLink.classList.remove('hidden');
-            } else {
+            } else
+            {
                 modalLink.href = '#';
                 modalLink.textContent = '';
                 modalLink.classList.add('hidden');
@@ -644,20 +642,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 作品の表示モードに応じてCSSクラスを切り替え
             const modalImageContainer = document.querySelector('.modal-image-container');
-            if (work.display_mode === "fit") {
+            if (work.display_mode === "fit")
+            {
                 modalImageContainer.classList.add('fit');
-            } else {
+            } else
+            {
                 modalImageContainer.classList.remove('fit');
             }
 
             // モーダルを表示し、スクロールを無効化
             workModal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            resetModalTabs();
         });
     });
 
     // モーダルを閉じる処理
-    const closeModal = () => {
+    const closeModal = () =>
+    {
         workModal.classList.remove('active');
         modalImage.src = '';
         modalThumbnailNav.innerHTML = '';
@@ -667,27 +669,64 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = ''; // スクロール禁止を解除
     };
 
+    // --- モーダルタブ切り替え機能 ---
+    const modalTabs = document.querySelectorAll(".modal-tab");
+    const modalSections = document.querySelectorAll(".modal-section");
+
+    // タブクリック時の切り替え（スマホのみ有効）
+    modalTabs.forEach(tab =>
+    {
+        tab.addEventListener("click", () =>
+        {
+            // スマホ時のみ実行
+            if (window.innerWidth > 768) return;
+
+            modalTabs.forEach(t => t.classList.remove("active"));
+            modalSections.forEach(sec => sec.classList.remove("active"));
+
+            tab.classList.add("active");
+            const targetId = tab.dataset.target;
+            document.querySelector(`#modal-section-${targetId}`).classList.add("active");
+        });
+    });
+
+    // モーダルを開くたびに「作品」タブからスタート
+    function resetModalTabs()
+    {
+        modalTabs.forEach(t => t.classList.remove("active"));
+        modalSections.forEach(sec => sec.classList.remove("active"));
+        document.querySelector('.modal-tab[data-target="image"]')?.classList.add("active");
+        document.querySelector('#modal-section-image')?.classList.add("active");
+    }
+
+
     modalCloseButton.addEventListener('click', closeModal);
 
     // モーダル背景クリックで閉じる
-    window.addEventListener('click', (e) => {
-        if (e.target === workModal) {
+    window.addEventListener('click', (e) =>
+    {
+        if (e.target === workModal)
+        {
             closeModal();
         }
     });
-    const pageTopBtn = document.getElementById('page-top-btn');
+
 
     // スクロールに応じて表示・非表示
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
+    window.addEventListener('scroll', () =>
+    {
+        if (window.scrollY > 100)
+        {
             pageTopBtn.classList.add('show');
-        } else {
+        } else
+        {
             pageTopBtn.classList.remove('show');
         }
     });
 
     // ボタンクリックでトップへスムーススクロール
-    pageTopBtn.addEventListener('click', () => {
+    pageTopBtn.addEventListener('click', () =>
+    {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -700,7 +739,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // worksオブジェクトからfeatured:trueの作品だけを抽出して表示
     Object.entries(works)
         .filter(([id, work]) => work.featured)
-        .forEach(([id, work]) => {
+        .forEach(([id, work]) =>
+        {
             const div = document.createElement('div');
             div.classList.add('featured-work-item');
 
@@ -724,7 +764,8 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.dataset.id = id;
 
             // クリック時は既存のモーダル処理を流用
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', (e) =>
+            {
                 e.stopPropagation();
                 const workId = btn.dataset.id;
                 const workData = works[workId];
@@ -732,7 +773,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalTitle.textContent = workData.title;
                 modalDescription.textContent = workData.description;
                 modalInfo.innerHTML = '';
-                workData.info.forEach(info => {
+                workData.info.forEach(info =>
+                {
                     const li = document.createElement('li');
                     li.textContent = info;
                     modalInfo.appendChild(li);
@@ -741,13 +783,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalImage.style.display = 'block';
 
                 modalThumbnailNav.innerHTML = '';
-                if (workData.images.length > 0) {
-                    workData.images.forEach((src, i) => {
+                if (workData.images.length > 0)
+                {
+                    workData.images.forEach((src, i) =>
+                    {
                         const thumb = document.createElement('img');
                         thumb.src = src;
                         thumb.classList.add('modal-thumbnail');
                         if (i === 0) thumb.classList.add('active');
-                        thumb.addEventListener('click', () => {
+                        thumb.addEventListener('click', () =>
+                        {
                             modalImage.src = src;
                             document.querySelectorAll('.modal-thumbnail').forEach(t => t.classList.remove('active'));
                             thumb.classList.add('active');
@@ -756,11 +801,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
-                if (workData.link) {
+                if (workData.link)
+                {
                     modalLink.href = workData.link;
                     modalLink.textContent = 'サイトを見る';
                     modalLink.classList.remove('hidden');
-                } else {
+                } else
+                {
                     modalLink.classList.add('hidden');
                 }
 
@@ -775,6 +822,4 @@ document.addEventListener('DOMContentLoaded', () => {
             div.appendChild(btn);
             featuredContainer.appendChild(div);
         });
-
-
 });

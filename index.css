@@ -487,21 +487,17 @@ section h2::after {
     line-height: 1.6;
 }
 
-/* スキル評価の星の色 */
 .skill-rating {
     color: #ddd;
-    /* 非アクティブな星の色 */
     font-size: 1.5rem;
     line-height: 1;
 }
 
 .skill-rating .star.active {
     color: #2c7ac1;
-    /* アクティブな星の色 */
 }
 
 /* Works セクション */
-
 h1 {
     font-size: 1.4rem;
     color: #2c7ac1;
@@ -554,6 +550,11 @@ h1 {
 }
 
 /* WORKSセクションの各作品アイテム */
+
+#featured-works-section h3 {
+    color: #2c7ac1;
+}
+
 .work-item {
     background: #fff;
     border-radius: 10px;
@@ -718,12 +719,10 @@ h1 {
     color: #555;
 }
 
-/* モーダル画像表示の調整 */
 .modal-image-container img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    /* アスペクト比を維持しつつ、コンテナに収める */
     width: auto;
     height: auto;
 }
@@ -781,8 +780,8 @@ footer {
     background-color: #fefefe;
     padding: 30px;
     border-radius: 10px;
-    width: 90%;
-    max-width: 90vw;
+    width: 100%;
+    max-width: 100vw;
     height: 90vh;
     max-height: 900px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -798,20 +797,28 @@ footer {
 }
 
 .modal-close-button {
-    color: #aaa;
-    position: absolute;
+    position: fixed;
+    top: 20px;
     right: 20px;
-    font-size: 28px;
+    z-index: 9999;
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 2rem;
     font-weight: bold;
     cursor: pointer;
-    transition: color 0.3s;
-    z-index: 10;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .modal-close-button:hover,
 .modal-close-button:focus {
     color: #e74c3c;
     text-decoration: none;
+}
+
+/* モーダルが閉じた後にボタンが残らないよう制御 */
+#work-modal:not(.active) .modal-close-button {
+    display: none;
 }
 
 /* モーダル内部のレイアウトを横並びに変更 */
@@ -836,6 +843,7 @@ footer {
     max-height: 100%;
 }
 
+
 #modal-image {
     max-width: 100%;
     height: auto;
@@ -844,6 +852,203 @@ footer {
     margin: 0 auto;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* --- タブUIの基本 --- */
+.modal-tabs {
+    display: none;
+    justify-content: center;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.modal-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    background: #f5f5f5;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.modal-tab.active {
+    background: #2c7ac1;
+    color: #fff;
+}
+
+#modal-link:empty {
+    display: none;
+}
+
+#modal-link:hover {
+    background-color: #1f5f9f;
+}
+
+/* --- スマホ時のみタブを有効に --- */
+@media (max-width: 768px) {
+    .modal-tabs {
+        display: flex;
+    }
+
+    /* スマホではタブで切り替え */
+    .modal-section {
+        display: none;
+    }
+
+    .modal-section.active {
+        display: block;
+    }
+
+    /* 縦スクロール対応 */
+    .modal-content {
+        flex-direction: column;
+        width: 90%;
+        max-height: 90%;
+        overflow-y: auto;
+    }
+
+    .modal-image-container img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* --- PCでは横並びを維持 --- */
+@media (min-width: 769px) {
+    .modal-content {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 2rem;
+        width: 80%;
+        max-width: 1000px;
+    }
+
+    .modal-section {
+        display: block;
+        flex: 1;
+    }
+
+    .modal-image-container img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+}
+
+/* === PC時のモーダル配置 === */
+@media (min-width: 769px) {
+
+    /* モーダルの背景中央に配置 */
+    #work-modal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* モーダル全体のコンテンツボックス */
+    .modal-content {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2rem;
+        width: 100%;
+        max-width: 1400px;
+        max-height: 90vh;
+        /* 画面の90%高さに制限 */
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        /* 内側でスクロール管理 */
+        position: relative;
+    }
+
+    /* 左側（画像エリア）は縦スクロール可 */
+    .modal-section#modal-section-image {
+        flex: 1;
+        max-height: 90vh;
+        overflow-y: auto;
+        /* ← スクロールは画像だけ */
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* 右側（説明エリア）は固定表示 */
+    .modal-section#modal-section-description {
+        flex: 1;
+        overflow: hidden;
+        /* ← スクロール禁止 */
+        padding: 20px;
+    }
+
+    /* スクロールバーを自然に */
+    .modal-section#modal-section-image::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .modal-section#modal-section-image::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+
+    /* モーダル画像のサイズ */
+    .modal-image-container img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+
+    /* モーダルを中央に固定 */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .modal-section#modal-section-image {
+        flex: 1;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* 横中央揃え */
+        justify-content: center;
+        /* 縦中央揃え ←追加 */
+        text-align: center;
+        /* 画像やサムネイル全体を中央寄せ */
+    }
+
+    /* モーダル画像 */
+    .modal-image-container img {
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+        /* 横中央 */
+    }
+
+    /* サムネイルナビ */
+    #modal-thumbnail-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
 }
 
 /* サムネイルナビゲーション */
@@ -1410,4 +1615,18 @@ footer {
 
 .pagetop-button:hover {
     animation: bounceLoop 1s infinite;
+}
+
+@media (max-width: 768px) {
+
+    /* トップボタンを完全に非表示にする */
+    .pagetop-button {
+        display: none !important;
+    }
+}
+
+.modal.active~#page-top-btn,
+.modal.is-active~#page-top-btn,
+#work-modal.active~#page-top-btn {
+    display: none;
 }

@@ -407,22 +407,34 @@
 
     <div id="work-modal" class="modal">
         <div class="modal-content">
-            <span class="modal-close-button">&times;</span>
-            <div class="modal-inner">
+            <button class="modal-close-button">×</button>
+
+            <!-- タブボタン（スマホのみ表示） -->
+            <div class="modal-tabs">
+                <button class="modal-tab active" data-target="image">作品</button>
+                <button class="modal-tab" data-target="description">説明</button>
+            </div>
+
+            <!-- 作品エリア -->
+            <div class="modal-section" id="modal-section-image">
                 <div class="modal-image-container">
-                    <img id="modal-image" src="LEARNING" alt="Work Image" />
+                    <img id="modal-image" src="" alt="作品画像" />
                     <div id="modal-thumbnail-nav"></div>
                 </div>
-                <div id="modal-details">
-                    <h3 id="modal-title"></h3>
+            </div>
+
+            <!-- 説明エリア -->
+            <div class="modal-section" id="modal-section-description">
+                <div class="modal-text-container">
+                    <h2 id="modal-title"></h2>
                     <p id="modal-description"></p>
                     <ul id="modal-info"></ul>
-                    <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer"
-                        class="view-site-button hidden"></a>
+                    <a id="modal-link" class="hidden" target="_blank"></a>
                 </div>
             </div>
         </div>
     </div>
+
 
     <button id="page-top-btn" class="pagetop-button">
         <span class="text-wrapper">
