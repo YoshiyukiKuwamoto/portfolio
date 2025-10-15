@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () =>
     {
       id: 2,
       name: "伊藤正彦",
-      profile: "profile/ゼミプロフ帳テンプレート - 伊藤正彦.pptx.png",
+      profile: "profile/ゼミプロフ帳テンプレート - 伊藤正彦.png",
       description: "「知識・経験・スキル・人脈といった一生役に立つ無形財産」を身に着けてもらう",
       image: "images/imashsemi03 - 伊藤正彦.jpg",
       activity: "週に1回のディスカッションと情報可視化を通したコミュニケーション技術の研究。",
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () =>
     {
       id: 10,
       name: "坂本",
-      profile: "profile/ゼミプロフ帳テンプレート - 坂本牧葉.pptx.jpg",
+      profile: "profile/ゼミプロフ帳テンプレート - 坂本牧葉.jpg",
       description: "デザイン力とコミュニケーションです！",
       image: "images/photo2 - 坂本牧葉.png",
       activity: "視覚的デザイン、イラストの分野の制作とデザインの研究に取り組みます。",
