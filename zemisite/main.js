@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () =>
       id: 2,
       labNumber: 325,
       name: "伊藤正彦",
-      profile: "profile/ゼミプロフ帳テンプレート - 伊藤正彦.pptx.png",
+      profile: "profile/ゼミプロフ帳テンプレート - 伊藤正彦.png",
       image: "images/imashsemi05 - 伊藤正彦.jpg",
       favorite: false,
       barData: {
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () =>
       id: 10,
       labNumber: 138,
       name: "坂本",
-      profile: "profile/ゼミプロフ帳テンプレート - 坂本牧葉.pptx.jpg",
+      profile: "profile/ゼミプロフ帳テンプレート - 坂本牧葉.jpg",
       image: "images/photo3 - 坂本牧葉.png",
       favorite: false,
       barData: {
