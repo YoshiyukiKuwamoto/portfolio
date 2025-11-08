@@ -12,75 +12,6 @@
 
 <body>
 
-    <!-- パスワード画面をコメントアウト -->
-    <!--
-    <div id="password-overlay">
-        <div class="password-container">
-            <h2>パスワードを入力してください</h2>
-            <input type="password" id="password-input" placeholder="パスワード">
-            <button id="password-submit">閲覧</button>
-            <p id="password-error" class="error-message"></p>
-        </div>
-    </div>
-    -->
-
-    <div id="loading-screen">
-        <div class="loading-panel top">
-            <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid meet">
-                <text class="loading-text-svg animate-right-to-left" x="50%" y="50%" dominant-baseline="middle"
-                    text-anchor="middle" stroke="white" stroke-width="2" fill="black">KUWAMOTO</text>
-            </svg>
-        </div>
-        <div class="loading-panel middle">
-            <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid meet">
-                <text class="loading-text-svg animate-left-to-right" x="50%" y="50%" dominant-baseline="middle"
-                    text-anchor="middle" stroke="white" stroke-width="2" fill="black">YOSHIYUKI</text>
-            </svg>
-        </div>
-        <div class="loading-panel bottom">
-            <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid meet">
-                <text class="loading-text-svg animate-right-to-left" x="50%" y="50%" dominant-baseline="middle"
-                    text-anchor="middle" stroke="white" stroke-width="2" fill="black">PORTFOLIO</text>
-            </svg>
-        </div>
-
-        <svg class="circle-text outer" viewBox="0 0 600 600">
-            <defs>
-                <path id="circlePathOuter" d="M 300, 300 m -280, 0 a 280,280 0 1,1 560,0 a 280,280 0 1,1 -560,0" />
-            </defs>
-            <text>
-                <textPath href="#circlePathOuter" startOffset="0%">
-                    "WELCOME TO MY PORTFOLIO SITE - FRONTEND & DEVELOPMENT" - "GRAPHIC"
-                    "WELCOME TO MY PORTFOLIO SITE - FRONTEND & DEVELOPMENT" - "GRAPHIC"
-                    "WELCOME TO MY PORTFOLIO SITE - FRONTEND & DEVELOPMENT" - "GRAPHIC"
-                    "WELCOME TO MY PORTFOLIO SITE - FRONTEND & DEVELOPMENT" - "GRAPHIC"
-                    "WELCOME TO MY PORTFOLIO SITE - FRONTEND & DEVELOPMENT" - "GRAPHIC"
-                </textPath>
-            </text>
-        </svg>
-
-        <svg class="circle-text inner" viewBox="0 0 600 600">
-            <defs>
-                <path id="circlePathInner" d="M 300, 300 m -240, 0 a 240,240 0 1,1 480,0 a 240,240 0 1,1 -480,0" />
-            </defs>
-            <text>
-                <textPath href="#circlePathInner" startOffset="0%">
-                    - "DESIGN" - "CODING" - "LEARNING" -
-                    - "DESIGN" - "CODING" - "LEARNING" -
-                    - "DESIGN" - "CODING" - "LEARNING" -
-                    - "DESIGN" - "CODING" - "LEARNING" -
-                    - "DESIGN" - "CODING" - "LEARNING" -
-                    - "DESIGN" - "CODING" - "LEARNING" -
-                </textPath>
-            </text>
-        </svg>
-
-
-        <button id="tap-button">TAP</button>
-
-        <div id="particle-container"></div>
-    </div>
-
     <main>
         <header>
             <nav id="main-nav">
@@ -91,6 +22,49 @@
                 </ul>
             </nav>
         </header>
+
+        <div id="fv">
+            <div id="particle-container"></div>
+
+            <div class="fv-panels">
+                <div class="fv-panel top">
+                    <svg class="animate-right-to-left" viewBox="0 0 1000 200">
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">KUWAMOTO</text>
+                    </svg>
+                </div>
+                <div class="fv-panel middle">
+                    <svg class="animate-left-to-right" viewBox="0 0 1000 200">
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">YOSHIYUKI</text>
+                    </svg>
+                </div>
+                <div class="fv-panel bottom">
+                    <svg class="animate-right-to-left" viewBox="0 0 1000 200">
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">PORTFOLIO</text>
+                    </svg>
+                </div>
+            </div>
+
+            <svg class="circle-text outer" viewBox="0 0 600 600">
+                <path id="outerPath" d="M300,300 m-250,0 a250,250 0 1,1 500,0 a250,250 0 1,1 -500,0" />
+                <text>
+                    <textPath href="#outerPath" startOffset="0%">KUWAMOTO YOSHIYUKI PORTFOLIO KUWAMOTO YOSHIYUKI
+                        PORTFOLIO KUWAMOTO YOSHIYUKI PORTFOLIO KUWAMOTO YOSHIYUKI
+                        PORTFOLIOKUWAMOTO YOSHIYUKI PORTFOLIO KUWAMOTO YOSHIYUKI
+                        PORTFOLIO</textPath>
+                </text>
+            </svg>
+
+            <svg class="circle-text inner" viewBox="0 0 530 530">
+                <path id="innerPath" d="M265,265 m-220,0 a220,220 0 1,1 440,0 a220,220 0 1,1 -440,0" />
+                <text>
+                    <textPath href="#innerPath" startOffset="0%">/ WEB DESIGN / FRONTEND / UI / UX/ WEB DESIGN /
+                        FRONTEND / UI / UX/ WEB DESIGN / FRONTEND / UI / UX/ WEB DESIGN / FRONTEND / UI / UX/ WEB DESIGN
+                        / FRONTEND / UI / UX/ WEB DESIGN / FRONTEND / UI / UX</textPath>
+                </text>
+            </svg>
+        </div>
+
+
         <section id="about">
             <h2>ABOUT ME</h2>
             <div class="about-content">

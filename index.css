@@ -8,7 +8,7 @@ body {
     scroll-behavior: smooth;
     position: relative;
     overflow-x: hidden;
-    padding-top: 60px;
+    padding-top: 40px;
 }
 
 /* --- ヘッダー --- */
@@ -51,17 +51,6 @@ header {
     background: #444;
 }
 
-.section-button span {
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    animation: none;
-    box-sizing: border-box;
-    vertical-align: middle;
-    min-width: 0.8em;
-    color: white;
-}
-
 /* タイピングアニメーション */
 @keyframes typing {
     from {
@@ -73,7 +62,6 @@ header {
     }
 }
 
-/* カーソル点滅アニメーション */
 @keyframes blink-caret {
 
     from,
@@ -88,70 +76,59 @@ header {
 
 .typing-animation {
     animation: typing var(--typing-duration) steps(var(--char-count), end) forwards,
-        blink-caret 0.75s step-end infinite;
+        blink-caret 0.7s step-end infinite;
 }
 
-/* --- ローディング画面 --- */
-#loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+#fv {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
     background-color: #000;
-    z-index: 9999;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
 }
 
-#loading-screen.visible {
-    opacity: 1;
-    visibility: visible;
-}
-
-#loading-screen.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-/* ローディングパネル */
-.loading-panel {
+.fv-panels {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 33.33vh;
-    background-color: #000;
-    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+}
+
+.fv-panel {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box;
+    background: #000;
+    overflow: hidden;
 }
 
-/* SVGテキストのスタイル */
-.loading-text-svg {
+.fv-panel svg {
     font-family: 'Noto Sans JP', sans-serif;
     font-size: 8rem;
     font-weight: bold;
     fill: black;
     stroke: white;
     stroke-width: 2px;
-    transition: opacity 0.5s ease-in-out;
+    user-select: none;
 }
 
-/* パネル内のテキストの継続的な横移動アニメーション */
-.loading-text-svg.animate-right-to-left {
+.animate-right-to-left {
     animation: slideRightToLeft 8s linear infinite;
 }
 
-.loading-text-svg.animate-left-to-right {
+.animate-left-to-right {
     animation: slideLeftToRight 8s linear infinite;
 }
 
-/* キーフレームアニメーションの定義 */
 @keyframes slideRightToLeft {
     0% {
         transform: translateX(100%);
@@ -172,102 +149,16 @@ header {
     }
 }
 
-/* ローディング画面が消える時のアニメーション */
-#loading-screen.fade-out .loading-panel.top {
-    animation: panelSlideOutLeft 1.5s ease-out forwards;
-}
-
-#loading-screen.fade-out .loading-panel.middle {
-    animation: panelSlideOutRight 1.5s ease-out forwards;
-}
-
-#loading-screen.fade-out .loading-panel.bottom {
-    animation: panelSlideOutLeft 1.5s ease-out forwards;
-}
-
-#loading-screen.fade-out .loading-panel .loading-text-svg {
-    animation: textFadeOut 1.5s ease-out forwards;
-}
-
-#loading-screen.fade-out #tap-button {
-    animation: circleFadeOut 1.5s ease-out forwards;
-}
-
-/* 左右のスライドアウトキーフレーム */
-@keyframes panelSlideOutLeft {
+@keyframes fadeIn {
     0% {
-        transform: translateX(0);
-        opacity: 1;
+        opacity: 0;
     }
 
     100% {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-}
-
-@keyframes panelSlideOutRight {
-    0% {
-        transform: translateX(0);
         opacity: 1;
     }
-
-    100% {
-        transform: translateX(100%);
-        opacity: 0;
-    }
 }
 
-/* フェードアウト時のキーフレームアニメーション（テキスト） */
-@keyframes textFadeOut {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
-/* circleFadeOutはtap-buttonのみに適用する */
-@keyframes circleFadeOut {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
-/* TAP/CLICKボタン */
-#tap-button {
-    position: absolute;
-    z-index: 10000;
-    padding: 10px 20px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
-    background-color: transparent;
-    border: 2px solid white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.3s ease-out;
-    opacity: 0;
-    visibility: hidden;
-}
-
-#tap-button:hover {
-    transform: scale(1.05);
-}
-
-#tap-button.fade-in {
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 1s ease-in, visibility 1s ease-in;
-}
-
-/* 円形のテキストSVG */
 .circle-text {
     position: absolute;
     opacity: 0;
@@ -310,7 +201,6 @@ header {
     fill: none;
 }
 
-/* 円の回転アニメーション */
 @keyframes rotateRight {
     from {
         transform: rotate(0deg);
@@ -331,18 +221,30 @@ header {
     }
 }
 
-/* --- メインコンテンツのフェードイン --- */
-main {
-    opacity: 0;
-    transition: opacity 1s ease-in;
+@media (max-width: 768px) {
+    .fv-panel svg {
+        font-size: 4rem;
+    }
+
+    .circle-text.outer {
+        width: 380px;
+        height: 380px;
+    }
+
+    .circle-text.inner {
+        width: 340px;
+        height: 340px;
+    }
+
+    .circle-text.outer text {
+        font-size: 16px;
+    }
+
+    .circle-text.inner text {
+        font-size: 13px;
+    }
 }
 
-main.visible-content {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* ヘッダー文字の一文字表示アニメーション */
 @keyframes fadeInOneByOne {
     0% {
         opacity: 0;
@@ -355,38 +257,44 @@ main.visible-content {
     }
 }
 
+/* パーティクルコンテナ */
+#particle-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 9990;
+}
+
+/* 個々のパーティクルスタイリング */
+.particle {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    opacity: 0;
+    bottom: 0;
+}
+
 .section-button:hover {
     background: #444;
     position: relative;
 }
 
 .section-button:hover::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
     transform: translateX(-50%);
-    width: 80%;
-    height: 3px;
-    background-color: #2c7ac1;
     transition: width 0.3s ease-out;
 }
 
-/* サイト表示と連動するアクティブ状態 */
 .section-button.active {
     background: #2c7ac1;
     position: relative;
 }
 
 .section-button.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
     transform: translateX(-50%);
-    width: 100%;
-    height: 3px;
-    background-color: #2c7ac1;
     transition: width 0.3s ease-out;
 }
 
@@ -816,12 +724,10 @@ footer {
     text-decoration: none;
 }
 
-/* モーダルが閉じた後にボタンが残らないよう制御 */
 #work-modal:not(.active) .modal-close-button {
     display: none;
 }
 
-/* モーダル内部のレイアウトを横並びに変更 */
 .modal-inner {
     display: flex;
     flex-direction: row;
@@ -854,7 +760,6 @@ footer {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* --- タブUIの基本 --- */
 .modal-tabs {
     display: none;
     justify-content: center;
@@ -901,7 +806,6 @@ footer {
         display: block;
     }
 
-    /* 縦スクロール対応 */
     .modal-content {
         flex-direction: column;
         width: 90%;
@@ -941,7 +845,6 @@ footer {
 /* === PC時のモーダル配置 === */
 @media (min-width: 769px) {
 
-    /* モーダルの背景中央に配置 */
     #work-modal {
         display: flex;
         align-items: center;
@@ -958,35 +861,28 @@ footer {
         width: 100%;
         max-width: 1400px;
         max-height: 90vh;
-        /* 画面の90%高さに制限 */
         background: #fff;
         border-radius: 10px;
         overflow: hidden;
-        /* 内側でスクロール管理 */
         position: relative;
     }
 
-    /* 左側（画像エリア）は縦スクロール可 */
     .modal-section#modal-section-image {
         flex: 1;
         max-height: 90vh;
         overflow-y: auto;
-        /* ← スクロールは画像だけ */
         padding: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
-    /* 右側（説明エリア）は固定表示 */
     .modal-section#modal-section-description {
         flex: 1;
         overflow: hidden;
-        /* ← スクロール禁止 */
         padding: 20px;
     }
 
-    /* スクロールバーを自然に */
     .modal-section#modal-section-image::-webkit-scrollbar {
         width: 8px;
     }
@@ -996,7 +892,6 @@ footer {
         border-radius: 4px;
     }
 
-    /* モーダル画像のサイズ */
     .modal-image-container img {
         width: 100%;
         height: auto;
@@ -1004,7 +899,6 @@ footer {
         margin-bottom: 10px;
     }
 
-    /* モーダルを中央に固定 */
     .modal {
         position: fixed;
         top: 0;
@@ -1023,24 +917,18 @@ footer {
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* 横中央揃え */
         justify-content: center;
-        /* 縦中央揃え ←追加 */
         text-align: center;
-        /* 画像やサムネイル全体を中央寄せ */
     }
 
-    /* モーダル画像 */
     .modal-image-container img {
         max-width: 100%;
         height: auto;
         object-fit: contain;
         display: block;
         margin: 0 auto;
-        /* 横中央 */
     }
 
-    /* サムネイルナビ */
     #modal-thumbnail-nav {
         display: flex;
         justify-content: center;
@@ -1150,27 +1038,6 @@ footer {
     border: none;
 }
 
-/* パーティクルコンテナ */
-#particle-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 9990;
-}
-
-/* 個々のパーティクルスタイリング */
-.particle {
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    opacity: 0;
-    bottom: 0;
-}
-
 @keyframes floatUp {
     0% {
         transform: translateY(0) scale(0);
@@ -1189,187 +1056,6 @@ footer {
     100% {
         transform: translateY(-100vh) scale(1.2);
         opacity: 0;
-    }
-}
-
-/* --- パスワードオーバーレイ --- */
-#password-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-}
-
-#password-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-.password-container {
-    background-color: #1a1a1a;
-    padding: 40px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    max-width: 400px;
-    width: 90%;
-    box-sizing: border-box;
-}
-
-.password-container h2 {
-    font-size: 1.43rem;
-    margin-bottom: 25px;
-    color: white;
-}
-
-#password-input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #444;
-    border-radius: 5px;
-    background-color: #333;
-    color: white;
-    font-size: 1.1rem;
-    box-sizing: border-box;
-}
-
-#password-input::placeholder {
-    color: #bbb;
-}
-
-#password-submit {
-    background-color: #2c7ac1;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#password-submit:hover {
-    background-color: #235a90;
-}
-
-.error-message {
-    color: #e74c3c;
-    font-size: 0.95rem;
-    margin-top: 15px;
-    height: 1.5em;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.error-message.visible {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* メインコンテンツを初期状態で隠すためのクラス */
-.hidden-content {
-    display: none !important;
-}
-
-/* --- パスワード入力エラー時の揺れアニメーション --- */
-@keyframes shake {
-    0% {
-        transform: translateX(0);
-    }
-
-    25% {
-        transform: translateX(-5px);
-    }
-
-    50% {
-        transform: translateX(5px);
-    }
-
-    75% {
-        transform: translateX(-5px);
-    }
-
-    100% {
-        transform: translateX(0);
-    }
-}
-
-.password-container.shake .error-message {
-    animation: shake 0.3s cubic-bezier(.36, .07, .19, .97) both;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-/* 入力欄のエラー時ボーダー */
-#password-input.error {
-    border: 2px solid #e74c3c;
-}
-
-/* --- ようこそメッセージのスタイルとアニメーション --- */
-@keyframes pop-in {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-
-    50% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* パスワード入力後、「ようこそ！」メッセージを中央に配置 */
-.welcome-message {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 5rem;
-    color: #57cae1;
-    text-align: center;
-    z-index: 1001;
-    opacity: 0;
-    animation: fadeInWelcome 1s forwards;
-    padding: auto;
-    text-shadow:
-        0 0 5px #2c7ac1,
-        0 0 10px #2c7ac1,
-        0 0 20px #2c7ac1,
-        0 0 40px #2c7ac1,
-        0 0 80px #2c7ac1,
-        0 0 90px #2c7ac1,
-        0 0 100px #2c7ac1,
-        0 0 150px #2c7ac1;
-}
-
-/* ようこそ！メッセージのフェードインアニメーション */
-@keyframes fadeInWelcome {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -30%);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
     }
 }
 
@@ -1394,16 +1080,16 @@ footer {
     }
 
     .skills-grid {
-        display: flex !important;
-        flex-direction: column !important;
+        display: flex;
+        flex-direction: column;
         gap: 30px;
         padding: 0 10px;
         width: auto;
     }
 
     .works-grid {
-        display: flex !important;
-        flex-direction: column !important;
+        display: flex;
+        flex-direction: column;
         gap: 30px;
         padding: 0 10px;
         width: auto;
@@ -1487,16 +1173,16 @@ footer {
 @media (max-width: 480px) {
 
     .skills-grid {
-        display: flex !important;
-        flex-direction: column !important;
+        display: flex;
+        flex-direction: column;
         gap: 30px;
         padding: 0 10px;
         width: auto;
     }
 
     .works-grid {
-        display: flex !important;
-        flex-direction: column !important;
+        display: flex;
+        flex-direction: column;
         gap: 30px;
         padding: 0 10px;
         width: auto;
@@ -1618,8 +1304,6 @@ footer {
 }
 
 @media (max-width: 768px) {
-
-    /* トップボタンを完全に非表示にする */
     .pagetop-button {
         display: none !important;
     }
