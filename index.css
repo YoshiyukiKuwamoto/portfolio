@@ -860,7 +860,6 @@ footer {
         max-height: 90vh;
         background: #fff;
         border-radius: 10px;
-        overflow: hidden;
         position: relative;
     }
 
@@ -872,8 +871,6 @@ footer {
         justify-content: center;
         align-items: center;
         padding: 20px;
-        overflow-y: auto;
-        overflow-x: hidden;
         max-height: 90vh;
         box-sizing: border-box;
     }
@@ -944,7 +941,6 @@ footer {
     width: 100%;
     padding: 10px 0;
     box-sizing: border-box;
-    overflow: visible !important;
 }
 
 #modal-thumbnail-nav img {
