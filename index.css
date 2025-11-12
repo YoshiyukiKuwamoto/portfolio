@@ -937,9 +937,12 @@ footer {
 #modal-thumbnail-nav {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 10px;
-    margin-top: 15px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    width: 100%;
 }
 
 #modal-thumbnail-nav img {
