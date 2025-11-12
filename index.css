@@ -695,7 +695,6 @@ footer {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     animation: fadeIn 0.3s ease-out;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
 }
@@ -826,14 +825,6 @@ footer {
 
 /* --- PCでは横並びを維持 --- */
 @media (min-width: 769px) {
-    .modal-content {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 2rem;
-        width: 80%;
-        max-width: 1000px;
-    }
 
     .modal-section {
         display: block;
@@ -898,8 +889,12 @@ footer {
 
     .modal-section#modal-section-description {
         flex: 1;
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
         padding: 20px;
+        max-height: 90vh;
+        box-sizing: border-box;
+        min-height: 0;
     }
 
     .modal-section#modal-section-image::-webkit-scrollbar {
@@ -969,16 +964,15 @@ footer {
 
 #modal-details {
     flex: 1;
-    padding: auto;
+    padding: 20px;
     box-sizing: border-box;
-    position: sticky;
-    align-self: flex-start;
-    max-height: 85vh;
     overflow-y: auto;
-    padding-right: 10px;
+    max-height: 90vh;
     text-align: left;
-    z-index: 1;
     -webkit-overflow-scrolling: touch;
+    position: relative;
+    align-self: auto;
+    min-height: 0;
 }
 
 #modal-title {
