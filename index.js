@@ -309,25 +309,24 @@ document.addEventListener('DOMContentLoaded', () => {
         rootMargin: "-45% 0px -45% 0px",
         threshold: 0,
     };
+    
 
     const sectionObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             const id = entry.target.getAttribute("id");
             let targetButtonSelector;
 
-            // --- works と featured-works-section を同一扱いに ---
             if (id === "works" || id === "featured-works-section") {
                 targetButtonSelector = '.section-button[href="#works"]';
             }
-            // --- fv（ファーストビュー）が表示されたときの特別処理 ---
+         
             else if (id === "fv") {
                 if (entry.isIntersecting) {
-                    // すべてのボタンを非アクティブに
                     document.querySelectorAll(".section-button").forEach((btn) =>
                         btn.classList.remove("active")
                     );
                 }
-                return; // ここで処理終了
+                return; 
             }
             else {
                 targetButtonSelector = `.section-button[href="#${id}"]`;

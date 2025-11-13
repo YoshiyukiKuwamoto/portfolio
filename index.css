@@ -708,6 +708,7 @@ footer {
     transition: opacity 0.3s ease, visibility 0.3s ease;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    z-index: 10001;
 }
 
 .modal.active,
