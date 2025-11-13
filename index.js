@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const navButtons = document.querySelectorAll('.section-button');
-    const sections = document.querySelectorAll('section');
+    const sections = document.querySelectorAll('section:not(#fv)');
     const header = document.querySelector('header');
     const mainContent = document.querySelector('main');
     const particleContainer = document.getElementById('particle-container');
@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
             images: ["image/portfoliopic.png"],
         },
         "zemi-site": {
-            featured: true,
             type: "image",
             category: "web-coding",
             title: "ゼミ紹介サイト",
@@ -137,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ],
         },
         "poster-design-work": {
+            featured: true,
             type: "image",
             category: "dtp-design",
             title: "ポスターデザイン",
