@@ -611,7 +611,10 @@ h1 {
 
 .featured-work-item img {
     width: 100%;
-    max-width: 800px;
+    height: auto;
+    max-width: 600px;
+    max-height: 400px;
+    object-fit: contain;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
 }
