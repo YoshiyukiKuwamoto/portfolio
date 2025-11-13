@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const navButtons = document.querySelectorAll('.section-button');
-    const sections = document.querySelectorAll('section:not(#fv)');
+    const sections = document.querySelectorAll('section, #fv');
     const header = document.querySelector('header');
     const mainContent = document.querySelector('main');
     const particleContainer = document.getElementById('particle-container');
@@ -297,21 +297,44 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     startHeaderTypingAnimation();
 
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    if (scrollIndicator) {
+        setTimeout(() => {
+            scrollIndicator.classList.add('visible');
+        }, 2000);
+    }
+
     const observerOptions = {
         root: null,
         rootMargin: "-45% 0px -45% 0px",
         threshold: 0,
     };
+
     const sectionObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             const id = entry.target.getAttribute("id");
             let targetButtonSelector;
+
+            // --- works と featured-works-section を同一扱いに ---
             if (id === "works" || id === "featured-works-section") {
                 targetButtonSelector = '.section-button[href="#works"]';
-            } else {
+            }
+            // --- fv（ファーストビュー）が表示されたときの特別処理 ---
+            else if (id === "fv") {
+                if (entry.isIntersecting) {
+                    // すべてのボタンを非アクティブに
+                    document.querySelectorAll(".section-button").forEach((btn) =>
+                        btn.classList.remove("active")
+                    );
+                }
+                return; // ここで処理終了
+            }
+            else {
                 targetButtonSelector = `.section-button[href="#${id}"]`;
             }
+
             const correspondingButton = document.querySelector(targetButtonSelector);
+
             if (entry.isIntersecting) {
                 document.querySelectorAll(".section-button").forEach((btn) =>
                     btn.classList.remove("active")
@@ -320,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }, observerOptions);
+
     sections.forEach((section) => sectionObserver.observe(section));
 
     navButtons.forEach((btn) => {
